@@ -44,42 +44,42 @@ export const Layout = ({ children }) => {
   const [navigation, setNavigation] = useState([])
   const location = useLocation()
 
-  const BinanceSidebar = [
-    {
-      name: "Announcement",
-      href: "/binance/announcement",
-    },
-    {
-      name: "Spot",
-      href: "/binance/spot",
-    },
-  ]
-  const DexSidebar = [
-    {
-      name: "New Listing",
-      href: "/dex/newListing",
-    },
-    {
-      name: "Legitimate list",
-      href: "/dex/legitimate",
-    },
-  ]
+  // const BinanceSidebar = [
+  //   {
+  //     name: "Announcement",
+  //     href: "/binance/announcement",
+  //   },
+  //   {
+  //     name: "Spot",
+  //     href: "/binance/spot",
+  //   },
+  // ]
+  // const DexSidebar = [
+  //   {
+  //     name: "New Listing",
+  //     href: "/dex/newListing",
+  //   },
+  //   {
+  //     name: "Legitimate list",
+  //     href: "/dex/legitimate",
+  //   },
+  // ]
 
   useEffect(() => {
     setNavigation([
       { name: "Dashboard", href: "/", icon: HomeIcon, current: true },
-      {
-        name: "Binance",
-        icon: BuildingOfficeIcon,
-        current: false,
-        children: BinanceSidebar,
-      },
-      {
-        name: "Dex Announcement",
-        icon: CreditCardIcon,
-        current: false,
-        children: DexSidebar,
-      },
+      // {
+      //   name: "Binance",
+      //   icon: BuildingOfficeIcon,
+      //   current: false,
+      //   children: BinanceSidebar,
+      // },
+      // {
+      //   name: "Dex Announcement",
+      //   icon: CreditCardIcon,
+      //   current: false,
+      //   children: DexSidebar,
+      // },
     ])
   }, [])
 
