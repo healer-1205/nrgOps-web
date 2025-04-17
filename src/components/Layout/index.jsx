@@ -318,7 +318,7 @@ export const Layout = ({ children }) => {
         </div>
 
         <div className="lg:pl-72">
-          <div className="sticky top-0 10 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 dark:border-gray-900 bg-white dark:bg-gray-900 px-4 shadow-xs sm:gap-x-6 sm:px-6 lg:px-8">
+          <div className="sticky top-0 10 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-xs sm:gap-x-6 sm:px-6 lg:px-8">
             <button
               type="button"
               onClick={() => setSidebarOpen(true)}
@@ -341,7 +341,7 @@ export const Layout = ({ children }) => {
                   type="search"
                   placeholder="Search"
                   aria-label="Search"
-                  className="col-start-1 row-start-1 block size-full bg-white dark:bg-gray-900 dark:text-gray-100 pl-8 text-base text-gray-900 outline-hidden placeholder:text-gray-400 sm:text-sm/6"
+                  className="col-start-1 row-start-1 block size-full bg-white pl-8 text-base text-gray-900 outline-hidden placeholder:text-gray-400 sm:text-sm/6"
                 />
                 <MagnifyingGlassIcon
                   aria-hidden="true"
@@ -375,7 +375,7 @@ export const Layout = ({ children }) => {
                     <span className="hidden lg:flex lg:items-center">
                       <span
                         aria-hidden="true"
-                        className="ml-4 text-sm/6 font-semibold text-gray-900 dark:text-gray-100"
+                        className="ml-4 text-sm/6 font-semibold text-gray-900"
                       >
                         Healer
                       </span>
@@ -387,13 +387,13 @@ export const Layout = ({ children }) => {
                   </MenuButton>
                   <MenuItems
                     transition
-                    className="absolute right-0 z-10 mt-2.5 w-32 origin-top-right rounded-md bg-white dark:bg-gray-800 py-2 ring-1 shadow-lg ring-gray-900/5 transition focus:outline-hidden data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
+                    className="absolute right-0 z-10 mt-2.5 w-32 origin-top-right rounded-md bg-white py-2 ring-1 shadow-lg ring-gray-900/5 transition focus:outline-hidden data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
                   >
                     {userNavigation.map((item) => (
                       <MenuItem key={item.name}>
                         <Link
                           to={item.href}
-                          className="block px-3 py-1 text-sm/6 text-gray-900 dark:text-gray-100 dark:hover:bg-gray-900 data-focus:bg-gray-50 data-focus:outline-hidden"
+                          className="block px-3 py-1 text-sm/6 text-gray-900 data-focus:bg-gray-50 data-focus:outline-hidden"
                         >
                           {item.name}
                         </Link>
@@ -405,8 +405,8 @@ export const Layout = ({ children }) => {
             </div>
           </div>
 
-          <main className="py-10">
-            <div className="px-4 sm:px-6 lg:px-8">{children}</div>
+          <main className="py-10 bg-gray-50 min-h-[calc(100vh-64px)]">
+            <div className="px-4 sm:px-6 lg:px-8 text-black">{children}</div>
           </main>
         </div>
       </div>
