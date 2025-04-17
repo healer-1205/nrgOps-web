@@ -19,9 +19,10 @@ import {
   BellIcon,
   Cog6ToothIcon,
   HomeIcon,
+  SquaresPlusIcon,
+  CircleStackIcon,
+  UserGroupIcon,
   XMarkIcon,
-  CreditCardIcon,
-  BuildingOfficeIcon,
 } from "@heroicons/react/24/outline"
 import {
   ChevronDownIcon,
@@ -44,55 +45,33 @@ export const Layout = ({ children }) => {
   const [navigation, setNavigation] = useState([])
   const location = useLocation()
 
-  // const BinanceSidebar = [
-  //   {
-  //     name: "Announcement",
-  //     href: "/binance/announcement",
-  //   },
-  //   {
-  //     name: "Spot",
-  //     href: "/binance/spot",
-  //   },
-  // ]
-  // const DexSidebar = [
-  //   {
-  //     name: "New Listing",
-  //     href: "/dex/newListing",
-  //   },
-  //   {
-  //     name: "Legitimate list",
-  //     href: "/dex/legitimate",
-  //   },
-  // ]
-
   useEffect(() => {
     setNavigation([
       { name: "Dashboard", href: "/", icon: HomeIcon, current: true },
-      // {
-      //   name: "Binance",
-      //   icon: BuildingOfficeIcon,
-      //   current: false,
-      //   children: BinanceSidebar,
-      // },
-      // {
-      //   name: "Dex Announcement",
-      //   icon: CreditCardIcon,
-      //   current: false,
-      //   children: DexSidebar,
-      // },
+      { name: "Agent", href: "/agent", icon: UserGroupIcon, current: false },
+      {
+        name: "Database",
+        href: "/database",
+        icon: CircleStackIcon,
+        current: false,
+      },
+      {
+        name: "Plugins",
+        href: "/plugins",
+        icon: SquaresPlusIcon,
+        current: false,
+      },
+      {
+        name: "Setting",
+        href: "/setting",
+        icon: Cog6ToothIcon,
+        current: false,
+      },
     ])
   }, [])
 
   return (
     <>
-      {/*
-        This example requires updating your template:
-
-        ```
-        <html class="h-full bg-white">
-        <body class="h-full">
-        ```
-      */}
       <div>
         <Dialog
           open={sidebarOpen}
@@ -127,11 +106,12 @@ export const Layout = ({ children }) => {
               {/* Sidebar component, swap this element with another sidebar if you like */}
               <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-gray-900 px-6 pb-4 ring-1 ring-white/10">
                 <div className="flex h-16 shrink-0 items-center">
-                  <img
+                  {/* <img
                     alt="Crypto Bot"
                     src={assets.Logo}
                     className="h-8 w-auto"
-                  />
+                  /> */}
+                  <p className="text-xl">NrgOps</p>
                 </div>
                 <nav className="flex flex-1 flex-col">
                   <ul role="list" className="flex flex-1 flex-col gap-y-7">
@@ -222,18 +202,6 @@ export const Layout = ({ children }) => {
                         ))}
                       </ul>
                     </li>
-                    <li className="mt-auto">
-                      <Link
-                        to="/"
-                        className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold text-gray-400 hover:bg-gray-800 hover:text-white"
-                      >
-                        <Cog6ToothIcon
-                          aria-hidden="true"
-                          className="size-6 shrink-0"
-                        />
-                        Settings
-                      </Link>
-                    </li>
                   </ul>
                 </nav>
               </div>
@@ -246,7 +214,8 @@ export const Layout = ({ children }) => {
           {/* Sidebar component, swap this element with another sidebar if you like */}
           <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-gray-900 px-6 pb-4">
             <div className="flex h-16 shrink-0 items-center m-auto">
-              <img alt="Crypto bot" src={assets.Logo} className="h-8 w-auto" />
+              {/* <img alt="Crypto bot" src={assets.Logo} className="h-8 w-auto" /> */}
+              <p className="text-3xl">NrgOps</p>
             </div>
             <nav className="flex flex-1 flex-col">
               <ul role="list" className="flex flex-1 flex-col gap-y-7">
@@ -342,18 +311,6 @@ export const Layout = ({ children }) => {
                         </li>
                       ))}
                   </ul>
-                </li>
-                <li className="mt-auto">
-                  <a
-                    href="#"
-                    className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold text-gray-400 hover:bg-gray-800 hover:text-white"
-                  >
-                    <Cog6ToothIcon
-                      aria-hidden="true"
-                      className="size-6 shrink-0"
-                    />
-                    Settings
-                  </a>
                 </li>
               </ul>
             </nav>
