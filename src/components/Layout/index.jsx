@@ -213,7 +213,7 @@ export const Layout = ({ children }) => {
           {/* Sidebar component, swap this element with another sidebar if you like */}
           <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-gray-900 px-6 pb-4">
             <div className="flex h-16 shrink-0 items-center m-auto">
-              <p className="text-3xl text-white" style={{ color: 'white !important' }}>NrgOps</p>
+              <p className="text-3xl text-white">NrgOps</p>
             </div>
             <nav className="flex flex-1 flex-col">
               <ul role="list" className="flex flex-1 flex-col gap-y-7">
@@ -233,16 +233,14 @@ export const Layout = ({ children }) => {
                                   "group flex items-center px-2 py-2 text-sm font-medium gap-x-3 rounded-md"
                                 )
                               }
-                              style={{ color: 'white !important' }}
                             >
                               {item.icon && (
                                 <item.icon
                                   className="h-6 w-6 shrink-0 text-gray-300"
                                   aria-hidden="true"
-                                  style={{ color: 'white !important' }}
                                 />
                               )}
-                              <div style={{ color: 'white !important'}}>{item.name}</div>
+                              {item.name}
                             </NavLink>
                           ) : (
                             <Disclosure
@@ -253,7 +251,6 @@ export const Layout = ({ children }) => {
                                   location.pathname.startsWith(child.href)
                                 )
                               }
-                              style={{ color: 'white !important' }}
                             >
                               {({ open }) => (
                                 <>
@@ -264,14 +261,12 @@ export const Layout = ({ children }) => {
                                         : "text-white hover:bg-gray-700 hover:text-white",
                                       "flex items-center w-full text-left rounded-md p-2 gap-x-3 text-sm leading-6 font-semibold"
                                     )}
-                                    style={{ color: 'white !important' }}
                                   >
                                     <item.icon
                                       className="h-6 w-6 shrink-0 text-gray-300"
                                       aria-hidden="true"
-                                      style={{ color: 'white !important' }}
                                     />
-                                    <div style={{ color: 'white !important' }}>{item.name}</div>
+                                    {item.name}
                                     <ChevronRightIcon
                                       className={classNames(
                                         open
@@ -280,7 +275,6 @@ export const Layout = ({ children }) => {
                                         "ml-auto h-5 w-5 shrink-0"
                                       )}
                                       aria-hidden="true"
-                                      style={{ color: 'white !important' }}
                                     />
                                   </DisclosureButton>
                                   {
@@ -322,7 +316,13 @@ export const Layout = ({ children }) => {
         </div>
 
         <div className="lg:pl-72">
-          <div className="sticky top-0 z-10 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 px-4 shadow-xs sm:gap-x-6 sm:px-6 lg:px-8" style={{ backgroundColor: 'var(--header-bg)', borderColor: 'var(--border-color)' }}>
+          <div
+            className="sticky top-0 z-10 flex h-16 shrink-0 items-center gap-x-4 border-b px-4 shadow-xs sm:gap-x-6 sm:px-6 lg:px-8"
+            style={{
+              backgroundColor: "var(--header-bg)",
+              borderColor: "var(--border-color)",
+            }}
+          >
             <button
               type="button"
               onClick={() => setSidebarOpen(true)}
@@ -345,8 +345,7 @@ export const Layout = ({ children }) => {
                   type="search"
                   placeholder="Search"
                   aria-label="Search"
-                  className="col-start-1 row-start-1 block size-full pl-8 text-base text-gray-900 outline-hidden placeholder:text-gray-400 sm:text-sm/6"
-                  
+                  className="col-start-1 row-start-1 block size-full pl-8 text-base outline-hidden placeholder:text-gray-400 sm:text-sm/6"
                 />
                 <MagnifyingGlassIcon
                   aria-hidden="true"
@@ -358,12 +357,14 @@ export const Layout = ({ children }) => {
                   type="button"
                   onClick={toggleTheme}
                   className="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                  style={{ backgroundColor: isDarkMode ? '#374151' : '#e5e7eb' }}
+                  style={{
+                    backgroundColor: isDarkMode ? "#374151" : "#e5e7eb",
+                  }}
                 >
                   <span className="sr-only">Toggle theme</span>
                   <span
                     className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                      isDarkMode ? 'translate-x-5' : 'translate-x-0'
+                      isDarkMode ? "translate-x-5" : "translate-x-0"
                     }`}
                   >
                     {isDarkMode ? (
@@ -430,8 +431,16 @@ export const Layout = ({ children }) => {
             </div>
           </div>
 
-          <main className="py-10 min-h-[calc(100vh-64px)]" style={{ backgroundColor: 'var(--bg-secondary)' }}>
-            <div className="px-4 sm:px-6 lg:px-8" style={{ color: 'var(--text-primary)' }}>{children}</div>
+          <main
+            className="py-10 min-h-[calc(100vh-64px)]"
+            style={{ backgroundColor: "var(--bg-secondary)" }}
+          >
+            <div
+              className="px-4 sm:px-6 lg:px-8"
+              style={{ color: "var(--text-primary)" }}
+            >
+              {children}
+            </div>
           </main>
         </div>
       </div>
