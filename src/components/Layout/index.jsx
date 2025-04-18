@@ -432,6 +432,7 @@ export const Layout = ({ children }) => {
             </div>
           </div>
 
+
           <main
             className="py-10 min-h-[calc(100vh-64px)]"
             style={{ backgroundColor: "var(--bg-secondary)" }}
