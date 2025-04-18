@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import { useLocation, NavLink } from "react-router"
 import { Link } from "react-router-dom"
+import { useTheme } from "../../context/ThemeContext"
 import {
   Dialog,
   DialogBackdrop,
@@ -23,6 +24,8 @@ import {
   CircleStackIcon,
   UserGroupIcon,
   XMarkIcon,
+  SunIcon,
+  MoonIcon,
 } from "@heroicons/react/24/outline"
 import {
   ChevronDownIcon,
@@ -44,6 +47,7 @@ export const Layout = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [navigation, setNavigation] = useState([])
   const location = useLocation()
+  const { isDarkMode, toggleTheme } = useTheme()
 
   useEffect(() => {
     setNavigation([
@@ -106,12 +110,7 @@ export const Layout = ({ children }) => {
               {/* Sidebar component, swap this element with another sidebar if you like */}
               <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-gray-900 px-6 pb-4 ring-1 ring-white/10">
                 <div className="flex h-16 shrink-0 items-center">
-                  {/* <img
-                    alt="Crypto Bot"
-                    src={assets.Logo}
-                    className="h-8 w-auto"
-                  /> */}
-                  <p className="text-xl">NrgOps</p>
+                  <p className="text-xl text-white">NrgOps</p>
                 </div>
                 <nav className="flex flex-1 flex-col">
                   <ul role="list" className="flex flex-1 flex-col gap-y-7">
@@ -126,13 +125,13 @@ export const Layout = ({ children }) => {
                                   classNames(
                                     isActive
                                       ? "bg-gray-800 text-white"
-                                      : "text-gray-300 hover:bg-gray-700 hover:text-white",
+                                      : "text-white hover:bg-gray-700 hover:text-white",
                                     "group flex items-center px-2 py-2 text-sm font-medium gap-x-3 rounded-md"
                                   )
                                 }
                               >
                                 <item.icon
-                                  className="h-6 w-6 shrink-0 text-gray-400"
+                                  className="h-6 w-6 shrink-0 text-gray-300"
                                   aria-hidden="true"
                                 />
                                 {item.name}
@@ -150,12 +149,12 @@ export const Layout = ({ children }) => {
                                       className={classNames(
                                         item.current
                                           ? "bg-gray-900"
-                                          : "text-gray-300 hover:bg-gray-700 hover:text-white",
-                                        "flex items-center w-full text-left rounded-md p-2 gap-x-3 text-sm leading-6 font-semibold text-gray-300"
+                                          : "text-white hover:bg-gray-700 hover:text-white",
+                                        "flex items-center w-full text-left rounded-md p-2 gap-x-3 text-sm leading-6 font-semibold"
                                       )}
                                     >
                                       <item.icon
-                                        className="h-6 w-6 shrink-0 text-gray-400"
+                                        className="h-6 w-6 shrink-0 text-gray-300"
                                         aria-hidden="true"
                                       />
                                       {item.name}
@@ -163,7 +162,7 @@ export const Layout = ({ children }) => {
                                         className={classNames(
                                           open
                                             ? "rotate-90 text-white"
-                                            : "text-gray-300",
+                                            : "text-white",
                                           "ml-auto h-5 w-5 shrink-0"
                                         )}
                                         aria-hidden="true"
@@ -182,9 +181,9 @@ export const Layout = ({ children }) => {
                                               className={({ isActive }) =>
                                                 classNames(
                                                   isActive
-                                                    ? "bg-gray-900"
-                                                    : "text-gray-300 hover:bg-gray-700 hover:text-white",
-                                                  "block rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-gray-300"
+                                                    ? "bg-gray-800"
+                                                    : "text-white hover:bg-gray-700 hover:text-white",
+                                                  "block rounded-md py-2 pr-2 pl-9 text-sm leading-6"
                                                 )
                                               }
                                             >
@@ -214,8 +213,7 @@ export const Layout = ({ children }) => {
           {/* Sidebar component, swap this element with another sidebar if you like */}
           <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-gray-900 px-6 pb-4">
             <div className="flex h-16 shrink-0 items-center m-auto">
-              {/* <img alt="Crypto bot" src={assets.Logo} className="h-8 w-auto" /> */}
-              <p className="text-3xl">NrgOps</p>
+              <p className="text-3xl text-white" style={{ color: 'white !important' }}>NrgOps</p>
             </div>
             <nav className="flex flex-1 flex-col">
               <ul role="list" className="flex flex-1 flex-col gap-y-7">
@@ -231,18 +229,20 @@ export const Layout = ({ children }) => {
                                 classNames(
                                   isActive
                                     ? "bg-gray-800 text-white"
-                                    : "text-gray-300 hover:bg-gray-700 hover:text-white",
+                                    : "text-white hover:bg-gray-700 hover:text-white",
                                   "group flex items-center px-2 py-2 text-sm font-medium gap-x-3 rounded-md"
                                 )
                               }
+                              style={{ color: 'white !important' }}
                             >
                               {item.icon && (
                                 <item.icon
-                                  className="h-6 w-6 shrink-0 text-gray-400"
+                                  className="h-6 w-6 shrink-0 text-gray-300"
                                   aria-hidden="true"
+                                  style={{ color: 'white !important' }}
                                 />
                               )}
-                              {item.name}
+                              <div style={{ color: 'white !important'}}>{item.name}</div>
                             </NavLink>
                           ) : (
                             <Disclosure
@@ -253,6 +253,7 @@ export const Layout = ({ children }) => {
                                   location.pathname.startsWith(child.href)
                                 )
                               }
+                              style={{ color: 'white !important' }}
                             >
                               {({ open }) => (
                                 <>
@@ -260,23 +261,26 @@ export const Layout = ({ children }) => {
                                     className={classNames(
                                       item.current
                                         ? "bg-gray-900"
-                                        : "text-gray-300 hover:bg-gray-700 hover:text-white",
-                                      "flex items-center w-full text-left rounded-md p-2 gap-x-3 text-sm leading-6 font-semibold text-gray-300"
+                                        : "text-white hover:bg-gray-700 hover:text-white",
+                                      "flex items-center w-full text-left rounded-md p-2 gap-x-3 text-sm leading-6 font-semibold"
                                     )}
+                                    style={{ color: 'white !important' }}
                                   >
                                     <item.icon
-                                      className="h-6 w-6 shrink-0 text-gray-400"
+                                      className="h-6 w-6 shrink-0 text-gray-300"
                                       aria-hidden="true"
+                                      style={{ color: 'white !important' }}
                                     />
-                                    {item.name}
+                                    <div style={{ color: 'white !important' }}>{item.name}</div>
                                     <ChevronRightIcon
                                       className={classNames(
                                         open
                                           ? "rotate-90 text-white"
-                                          : "text-gray-300",
+                                          : "text-white",
                                         "ml-auto h-5 w-5 shrink-0"
                                       )}
                                       aria-hidden="true"
+                                      style={{ color: 'white !important' }}
                                     />
                                   </DisclosureButton>
                                   {
@@ -293,8 +297,8 @@ export const Layout = ({ children }) => {
                                               classNames(
                                                 isActive
                                                   ? "bg-gray-800"
-                                                  : "text-gray-300 hover:bg-gray-700 hover:text-white",
-                                                "block rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-gray-300"
+                                                  : "text-white hover:bg-gray-700 hover:text-white",
+                                                "block rounded-md py-2 pr-2 pl-9 text-sm leading-6"
                                               )
                                             }
                                           >
@@ -318,7 +322,7 @@ export const Layout = ({ children }) => {
         </div>
 
         <div className="lg:pl-72">
-          <div className="sticky top-0 10 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-xs sm:gap-x-6 sm:px-6 lg:px-8">
+          <div className="sticky top-0 z-10 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 px-4 shadow-xs sm:gap-x-6 sm:px-6 lg:px-8" style={{ backgroundColor: 'var(--header-bg)', borderColor: 'var(--border-color)' }}>
             <button
               type="button"
               onClick={() => setSidebarOpen(true)}
@@ -341,7 +345,8 @@ export const Layout = ({ children }) => {
                   type="search"
                   placeholder="Search"
                   aria-label="Search"
-                  className="col-start-1 row-start-1 block size-full bg-white pl-8 text-base text-gray-900 outline-hidden placeholder:text-gray-400 sm:text-sm/6"
+                  className="col-start-1 row-start-1 block size-full pl-8 text-base text-gray-900 outline-hidden placeholder:text-gray-400 sm:text-sm/6"
+                  
                 />
                 <MagnifyingGlassIcon
                   aria-hidden="true"
@@ -349,6 +354,26 @@ export const Layout = ({ children }) => {
                 />
               </form>
               <div className="flex items-center gap-x-4 lg:gap-x-6">
+                <button
+                  type="button"
+                  onClick={toggleTheme}
+                  className="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                  style={{ backgroundColor: isDarkMode ? '#374151' : '#e5e7eb' }}
+                >
+                  <span className="sr-only">Toggle theme</span>
+                  <span
+                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                      isDarkMode ? 'translate-x-5' : 'translate-x-0'
+                    }`}
+                  >
+                    {isDarkMode ? (
+                      <SunIcon className="h-5 w-5 text-yellow-400" />
+                    ) : (
+                      <MoonIcon className="h-5 w-5 text-gray-600" />
+                    )}
+                  </span>
+                </button>
+
                 <button
                   type="button"
                   className="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500"
@@ -375,7 +400,7 @@ export const Layout = ({ children }) => {
                     <span className="hidden lg:flex lg:items-center">
                       <span
                         aria-hidden="true"
-                        className="ml-4 text-sm/6 font-semibold text-gray-900"
+                        className="ml-4 text-sm/6 font-semibold"
                       >
                         Healer
                       </span>
@@ -405,8 +430,8 @@ export const Layout = ({ children }) => {
             </div>
           </div>
 
-          <main className="py-10 bg-gray-50 min-h-[calc(100vh-64px)]">
-            <div className="px-4 sm:px-6 lg:px-8 text-black">{children}</div>
+          <main className="py-10 min-h-[calc(100vh-64px)]" style={{ backgroundColor: 'var(--bg-secondary)' }}>
+            <div className="px-4 sm:px-6 lg:px-8" style={{ color: 'var(--text-primary)' }}>{children}</div>
           </main>
         </div>
       </div>
