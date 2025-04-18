@@ -363,7 +363,7 @@ export const Layout = ({ children }) => {
                 >
                   <span className="sr-only">Toggle theme</span>
                   <span
-                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full shadow ring-0 transition duration-200 ease-in-out ${
                       isDarkMode ? "translate-x-5" : "translate-x-0"
                     }`}
                   >
