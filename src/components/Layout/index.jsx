@@ -26,6 +26,7 @@ import {
   XMarkIcon,
   SunIcon,
   MoonIcon,
+  PencilSquareIcon,
 } from "@heroicons/react/24/outline"
 import {
   ChevronDownIcon,
@@ -52,7 +53,6 @@ export const Layout = ({ children }) => {
   useEffect(() => {
     setNavigation([
       { name: "Dashboard", href: "/", icon: HomeIcon, current: true },
-      { name: "Agent", href: "/agent", icon: UserGroupIcon, current: false },
       {
         name: "Database",
         href: "/database",
@@ -201,6 +201,41 @@ export const Layout = ({ children }) => {
                         ))}
                       </ul>
                     </li>
+                    <li className="border-t border-gray-800 pt-4">
+                      <ul role="list" className="-mx-2 space-y-1">
+                        <li>
+                          <NavLink
+                            to="/agent"
+                            className={({ isActive }) =>
+                              classNames(
+                                isActive
+                                  ? "bg-gray-800 text-white"
+                                  : "text-white hover:bg-gray-700 hover:text-white",
+                                "group flex items-center justify-between px-2 py-2 text-sm font-medium gap-x-3 rounded-md"
+                              )
+                            }
+                          >
+                            <div className="flex items-center gap-x-3">
+                              <UserGroupIcon
+                                className="h-6 w-6 shrink-0 text-gray-300"
+                                aria-hidden="true"
+                              />
+                              Agent
+                            </div>
+                            <div className="flex items-center gap-x-3">
+                              <MagnifyingGlassIcon
+                                aria-hidden="true"
+                                className="size-6 text-gray-300"
+                              />
+                              <PencilSquareIcon
+                                aria-hidden="true"
+                                className="size-6 text-gray-300"
+                              />
+                            </div>
+                          </NavLink>
+                        </li>
+                      </ul>
+                    </li>
                   </ul>
                 </nav>
               </div>
@@ -310,19 +345,54 @@ export const Layout = ({ children }) => {
                       ))}
                   </ul>
                 </li>
+                <li className="border-t border-gray-800 pt-4">
+                  <ul role="list" className="-mx-2 space-y-1">
+                    <li>
+                      <NavLink
+                        to="/agent"
+                        className={({ isActive }) =>
+                          classNames(
+                            isActive
+                              ? "bg-gray-800 text-white"
+                              : "text-white hover:bg-gray-700 hover:text-white",
+                            "group flex items-center justify-between px-2 py-2 text-sm font-medium gap-x-3 rounded-md"
+                          )
+                        }
+                      >
+                        <div className="flex items-center gap-x-3">
+                          <UserGroupIcon
+                            className="h-6 w-6 shrink-0 text-gray-300"
+                            aria-hidden="true"
+                          />
+                          Agent
+                        </div>
+                        <div className="flex items-center gap-x-3">
+                          <MagnifyingGlassIcon
+                            aria-hidden="true"
+                            className="size-6 text-gray-300"
+                            onClick={() => {
+                              alert("Search clicked")
+                            }}
+                          />
+                          <PencilSquareIcon
+                            aria-hidden="true"
+                            className="size-6 text-gray-300"
+                            onClick={() => {
+                              alert("New clicked")
+                            }}
+                          />
+                        </div>
+                      </NavLink>
+                    </li>
+                  </ul>
+                </li>
               </ul>
             </nav>
           </div>
         </div>
 
         <div className="lg:pl-72">
-          <div
-            className="sticky top-0 z-10 flex h-16 shrink-0 items-center gap-x-4 border-b px-4 shadow-xs sm:gap-x-6 sm:px-6 lg:px-8"
-            style={{
-              backgroundColor: "var(--header-bg)",
-              borderColor: "var(--border-color)",
-            }}
-          >
+          <div className="sticky top-0 z-10 flex h-16 shrink-0 items-center gap-x-4 border-b px-4 shadow-xs sm:gap-x-6 sm:px-6 lg:px-8 bg-[var(--header-bg)] border-[var(--border-color)]">
             <button
               type="button"
               onClick={() => setSidebarOpen(true)}
@@ -413,8 +483,7 @@ export const Layout = ({ children }) => {
                   </MenuButton>
                   <MenuItems
                     transition
-                    className="absolute right-0 z-10 mt-2.5 w-32 origin-top-right rounded-md py-2 ring-1 shadow-lg ring-gray-900/5 transition focus:outline-hidden data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
-                    style={{ backgroundColor: "var(--bg-primary)" }}
+                    className="absolute right-0 z-10 mt-2.5 w-32 origin-top-right rounded-md py-2 ring-1 shadow-lg ring-gray-900/5 transition focus:outline-hidden data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in bg-[var(--bg-primary)]"
                   >
                     {userNavigation.map((item) => (
                       <MenuItem key={item.name}>
@@ -432,15 +501,8 @@ export const Layout = ({ children }) => {
             </div>
           </div>
 
-
-          <main
-            className="py-10 min-h-[calc(100vh-64px)]"
-            style={{ backgroundColor: "var(--bg-secondary)" }}
-          >
-            <div
-              className="px-4 sm:px-6 lg:px-8"
-              style={{ color: "var(--text-primary)" }}
-            >
+          <main className="py-10 min-h-[calc(100vh-64px)] bg-[var(--bg-secondary)]">
+            <div className="px-4 sm:px-6 lg:px-8 text-[var(--text-primary)]">
               {children}
             </div>
           </main>
