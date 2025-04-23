@@ -1,30 +1,32 @@
 import { useState, useRef, useCallback, useEffect } from "react"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
-import { PaperAirplaneIcon, ChatBubbleLeftEllipsisIcon } from "@heroicons/react/24/outline"
+import {
+  PaperAirplaneIcon,
+  ChatBubbleLeftEllipsisIcon,
+} from "@heroicons/react/24/outline"
 import { ChevronRightIcon } from "@heroicons/react/20/solid"
 import { v4 as uuidv4 } from "uuid"
+import { API_URL } from "../../utils/constants"
 
 const QuickActions = [
   {
     title: "📋 Today's Leads",
-    description: "List all the leads from today",
+    description: "How much production did we generate today as a company?",
   },
   {
     title: "🏆 Top Leads",
-    description: "Who are the top leads today?",
+    description: "When was the latest oil pick up?",
   },
   {
     title: "🆕 New Leads",
-    description: "List all leads created today",
+    description: "What are our least performing wells?",
   },
   {
     title: "🚀 NrgOps AI",
-    description: "Who are you and what can you do?",
+    description: "What is our expected revenue this month?",
   },
 ]
-
-const API_BASE_URL = "https://api-agent.yaitec.dev"
 
 const InputArea = ({
   isStandalone = false,
@@ -167,7 +169,7 @@ export const Agent = () => {
       setIsLoading(true)
       setError(null)
 
-      const url = `${API_BASE_URL}/message-history/${sessionId}`
+      const url = `${API_URL}/message-history/${sessionId}`
       const response = await fetch(url)
 
       if (!response.ok) {
@@ -219,7 +221,7 @@ export const Agent = () => {
       setIsLoadingConversations(true)
       const id_usuario = localStorage.getItem("id")
       const response = await fetch(
-        `${API_BASE_URL}/message-history-user-id/${id_usuario}`
+        `${API_URL}/message-history-user-id/${id_usuario}`
       )
 
       if (!response.ok) {
@@ -327,7 +329,7 @@ export const Agent = () => {
     scrollToBottom()
 
     try {
-      const response = await fetch(`${API_BASE_URL}/nabl-agent/query`, {
+      const response = await fetch(`${API_URL}/api/agent/query`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
