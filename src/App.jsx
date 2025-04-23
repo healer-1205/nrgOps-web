@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom"
 import { PrivateRoute } from "./components/Router/PrivateRoute"
 import { Signin } from "./pages/Signin"
+import { Signup } from "./pages/Signup"
 import { Layout } from "./components/Layout"
 import { Dashboard } from "./pages/Dashboard"
 import { Agent } from "./pages/Agent"
@@ -13,6 +14,7 @@ function App() {
   return (
     <Routes>
       <Route path="/signin" element={<Signin />} />
+      <Route path="/signup" element={<Signup />} />
       <Route
         path="/"
         element={
