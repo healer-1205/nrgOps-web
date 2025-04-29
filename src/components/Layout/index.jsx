@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { useLocation, NavLink } from "react-router"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { useTheme } from "../../context/ThemeContext"
 import {
   Dialog,
@@ -37,7 +37,6 @@ import assets from "../../assets"
 
 const userNavigation = [
   { name: "Your profile", href: "/" },
-  { name: "Sign out", href: "/" },
 ]
 
 function classNames(...classes) {
@@ -45,9 +44,10 @@ function classNames(...classes) {
 }
 
 export const Layout = ({ children }) => {
+  const navigate = useNavigate()
+  const location = useLocation()
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [navigation, setNavigation] = useState([])
-  const location = useLocation()
   const { isDarkMode, toggleTheme } = useTheme()
 
   useEffect(() => {
@@ -495,6 +495,17 @@ export const Layout = ({ children }) => {
                         </Link>
                       </MenuItem>
                     ))}
+                    <MenuItem>
+                      <button
+                        className="block px-3 py-1 text-sm/6 data-focus:outline-hidden cursor-pointer hover:text-indigo-500"
+                        onClick={() => {
+                          localStorage.removeItem("accessToken")
+                          navigate("/signin")
+                        }}
+                      >
+                        Sign out
+                      </button>
+                    </MenuItem>
                   </MenuItems>
                 </Menu>
               </div>

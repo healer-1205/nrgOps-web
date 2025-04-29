@@ -1,4 +1,7 @@
 import { Route, Routes } from "react-router-dom"
+import { PrivateRoute } from "./components/Router/PrivateRoute"
+import { Signin } from "./pages/Signin"
+import { Signup } from "./pages/Signup"
 import { Layout } from "./components/Layout"
 import { Dashboard } from "./pages/Dashboard"
 import { Agent } from "./pages/Agent"
@@ -10,44 +13,66 @@ import "./App.css"
 function App() {
   return (
     <Routes>
+      <Route path="/signin" element={<Signin />} />
+      <Route path="/signup" element={<Signup />} />
       <Route
         path="/"
         element={
-          <Layout>
-            <Dashboard />
-          </Layout>
+          <PrivateRoute>
+            <Layout>
+              <Dashboard />
+            </Layout>
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/dashboard"
+        element={
+          <PrivateRoute>
+            <Layout>
+              <Dashboard />
+            </Layout>
+          </PrivateRoute>
         }
       />
       <Route
         path="/agent"
         element={
-          <Layout>
-            <Agent />
-          </Layout>
+          <PrivateRoute>
+            <Layout>
+              <Agent />
+            </Layout>
+          </PrivateRoute>
         }
       />
       <Route
         path="/database"
         element={
-          <Layout>
-            <Database />
-          </Layout>
+          <PrivateRoute>
+            <Layout>
+              <Database />
+            </Layout>
+          </PrivateRoute>
         }
       />
       <Route
         path="/plugins"
         element={
-          <Layout>
-            <Plugins />
-          </Layout>
+          <PrivateRoute>
+            <Layout>
+              <Plugins />
+            </Layout>
+          </PrivateRoute>
         }
       />
       <Route
         path="/setting"
         element={
-          <Layout>
-            <Setting />
-          </Layout>
+          <PrivateRoute>
+            <Layout>
+              <Setting />
+            </Layout>
+          </PrivateRoute>
         }
       />
     </Routes>
