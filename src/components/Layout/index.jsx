@@ -208,7 +208,6 @@ export const Layout = ({ children }) => {
             : "bot",
         message: msg.chat || "",
       }))
-      console.log("formattedMessages:", formattedMessages)
       if (formattedMessages.length > 0) {
         savedData.saveChatHistoryPerSession(formattedMessages)
         setCurrentSessionId(sessionId)
