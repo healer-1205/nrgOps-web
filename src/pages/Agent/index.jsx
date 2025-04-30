@@ -1,13 +1,18 @@
-import { useState, useRef, useCallback, useEffect } from "react"
+import { useState, useRef, useCallback, useEffect, memo } from "react"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import {
   PaperAirplaneIcon,
   ChatBubbleLeftEllipsisIcon,
+  UserIcon,
+  BugAntIcon,
 } from "@heroicons/react/24/outline"
 import { ChevronRightIcon } from "@heroicons/react/20/solid"
 import { v4 as uuidv4 } from "uuid"
 import { API_URL } from "../../utils/constants"
+import { useContent } from "../../context/ContentContext"
+import axiosInstance from "../../utils/axios"
+import { processChatHistoryByUserId } from "../../utils/processChatHistoryByUserId"
 
 const QuickActions = [
   {
@@ -28,57 +33,60 @@ const QuickActions = [
   },
 ]
 
-const InputArea = ({
-  isStandalone = false,
-  message,
-  setMessage,
-  handleSendMessage,
-  isLoading,
-  handleKeyDown,
-}) => {
-  return (
-    <div
-      className={`${
-        isStandalone
-          ? "w-full max-w-2xl p-4 rounded-lg shadow-md"
-          : "sticky bottom-0 w-full border-t p-4"
-      }`}
-    >
-      <div className={`${isStandalone ? "" : "max-w-3xl mx-auto"}`}>
-        <div className="flex items-center gap-4">
-          <textarea
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="Send a message to NABL"
-            rows={2}
-            className="flex-grow px-4 py-3 rounded-lg placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 border border-[var(--border-color)]"
-            style={{
-              resize: "none",
-              minHeight: "44px",
-              maxHeight: "200px",
-            }}
-          />
-          <button
-            onClick={() => handleSendMessage(message)}
-            disabled={isLoading}
-            className="p-2 rounded-lg bg-blue-500 hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <PaperAirplaneIcon
-              aria-hidden="true"
-              className="size-6 cursor-pointer"
+const InputArea = memo(
+  ({
+    isStandalone = false,
+    message,
+    setMessage,
+    handleSendMessage,
+    isLoading,
+    handleKeyDown,
+  }) => {
+    return (
+      <div
+        className={`${
+          isStandalone
+            ? "w-full max-w-2xl p-4 rounded-lg shadow-md"
+            : "sticky bottom-0 w-full border-t p-4"
+        }`}
+      >
+        <div className={`${isStandalone ? "" : "max-w-3xl mx-auto"}`}>
+          <div className="flex items-center gap-4">
+            <textarea
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="Send a message to NABL"
+              rows={2}
+              className="flex-grow px-4 py-3 rounded-lg placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 border border-[var(--border-color)]"
+              style={{
+                resize: "none",
+                minHeight: "44px",
+                maxHeight: "200px",
+              }}
             />
-          </button>
+            <button
+              onClick={() => handleSendMessage(message)}
+              disabled={isLoading || !message.trim()}
+              className="p-2 rounded-lg bg-blue-500 hover:bg-blue-600 transition-colors disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
+            >
+              <PaperAirplaneIcon
+                aria-hidden="true"
+                className="size-6 text-white"
+              />
+            </button>
+          </div>
+          <p className="text-xs text-center text-gray-500 mt-2">
+            AI Assistant is ready to help analyze your calls and provide
+            insights.
+          </p>
         </div>
-        <p className="text-xs text-center text-gray-500 mt-2">
-          AI Assistant is ready to help analyze your calls and provide insights.
-        </p>
       </div>
-    </div>
-  )
-}
+    )
+  }
+)
 
-const TypingIndicator = () => (
+const TypingIndicator = memo(() => (
   <div className="flex items-end space-x-1 px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 w-16">
     <div
       className="w-2 h-2 rounded-full bg-gray-500 dark:bg-gray-400 animate-bounce"
@@ -93,9 +101,9 @@ const TypingIndicator = () => (
       style={{ animationDelay: "300ms", animationDuration: "600ms" }}
     />
   </div>
-)
+))
 
-const ChatMessage = ({ message, from }) => (
+const ChatMessage = memo(({ message, from }) => (
   <div
     className={`flex ${from === "user" ? "justify-end" : "justify-start"} mb-4`}
   >
@@ -113,9 +121,9 @@ const ChatMessage = ({ message, from }) => (
           }`}
         >
           {from === "user" ? (
-            <User className="w-5 h-5" />
+            <UserIcon aria-hidden="true" className="size-6 text-white" />
           ) : (
-            <Bot className="w-5 h-5" />
+            <BugAntIcon aria-hidden="true" className="size-6 text-white" />
           )}
         </div>
       </div>
@@ -135,29 +143,34 @@ const ChatMessage = ({ message, from }) => (
       </div>
     </div>
   </div>
-)
+))
 
 export const Agent = () => {
   const [message, setMessage] = useState("")
   const [chatMessages, setChatMessages] = useState([])
   const [isLoading, setIsLoading] = useState(false)
-  const [isLoadingConversations, setIsLoadingConversations] = useState(true)
   const [currentSessionId, setCurrentSessionId] = useState(null)
-  const [conversations, setConversations] = useState({
-    today: [],
-    yesterday: [],
-    older: [],
-  })
   const [error, setError] = useState(null)
   const messagesEndRef = useRef(null)
-  const chatContainerRef = useRef(null)
-  const initialLoadRef = useRef(false)
+  const abortControllerRef = useRef(null)
+  const savedData = useContent()
 
-  const scrollToBottom = () => {
+  useEffect(() => {
+    fetchConversationsByUserId()
+
+    // Set up a cleanup function to abort any ongoing API requests when the component unmounts
+    return () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort()
+      }
+    }
+  }, [])
+
+  useEffect(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" })
     }
-  }
+  }, [chatMessages, isLoading])
 
   const fetchMessageHistoryBySession = useCallback(async (sessionId) => {
     if (!sessionId) {
@@ -216,86 +229,39 @@ export const Agent = () => {
     }
   }, [])
 
-  const fetchConversations = useCallback(async () => {
+  const fetchConversationsByUserId = useCallback(async () => {
     try {
-      setIsLoadingConversations(true)
-      const id_usuario = localStorage.getItem("id")
-      const response = await fetch(
-        `${API_URL}/message-history-user-id/${id_usuario}`
-      )
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch conversations")
-      }
-
-      const data = await response.json()
-
-      const today = new Date()
-      today.setHours(0, 0, 0, 0)
-      const yesterday = new Date(today)
-      yesterday.setDate(yesterday.getDate() - 1)
-
-      const todayChats = []
-      const yesterdayChats = []
-      const olderChats = []
-
-      if (data.status === "success" && Array.isArray(data.history)) {
-        data.history.forEach((chat) => {
-          const firstMessage = chat.messages[0]
-          const lastMessage = chat.messages[chat.messages.length - 1]
-
-          const formattedChat = {
-            id: chat.id,
-            session_id: chat.id,
-            title: firstMessage.message?.slice(0, 30) + "..." || "Sem título",
-            preview: lastMessage.message?.slice(0, 40) + "..." || "Sem preview",
-            timestamp: firstMessage.timestamp || new Date().toISOString(),
-          }
-
-          const chatDate = new Date(formattedChat.timestamp)
-          chatDate.setHours(0, 0, 0, 0)
-
-          if (chatDate.getTime() === today.getTime()) {
-            todayChats.push(formattedChat)
-          } else if (chatDate.getTime() === yesterday.getTime()) {
-            yesterdayChats.push(formattedChat)
-          } else {
-            olderChats.push(formattedChat)
-          }
-        })
-      }
-
-      setConversations({
-        today: todayChats.sort(
-          (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
-        ),
-        yesterday: yesterdayChats.sort(
-          (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
-        ),
-        older: olderChats.sort(
-          (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
-        ),
+      savedData.saveLoadingConversationsStatus(true)
+      const userId = localStorage.getItem("id")
+      const response = await axiosInstance({
+        method: "get",
+        url: `${API_URL}/api/agent/messageHistoryByUserId/${userId}`,
       })
+
+      const data = response.data
+
+      const sortedConversations = processChatHistoryByUserId(data)
+      await savedData.saveMessageHistoryByUserId(sortedConversations)
     } catch (error) {
       console.error("Error fetching conversations:", error)
       setError("Failed to load conversations. Please try again.")
     } finally {
-      setIsLoadingConversations(false)
+      savedData.saveLoadingConversationsStatus(false)
     }
-  }, [])
+  }, [savedData])
 
-  useEffect(() => {
-    if (!initialLoadRef.current) {
-      initialLoadRef.current = true
-    }
-  }, [])
+  // useEffect(() => {
+  //   fetchConversationsByUserId()
+  // }, [fetchConversationsByUserId])
 
   // Fetch conversations when the component mounts everytime the user focuses the window
   // or when the visibility changes
 
   // useEffect(() => {
   //   const handleFocus = () => {
-  //     fetchConversations()
+  // if (checkAuthentication()) {
+  //   fetchConversationsByUserId()
+  // }
   //   }
 
   //   window.addEventListener("focus", handleFocus)
@@ -309,7 +275,7 @@ export const Agent = () => {
   //     window.removeEventListener("focus", handleFocus)
   //     document.removeEventListener("visibilitychange", handleFocus)
   //   }
-  // }, [fetchConversations])
+  // }, [fetchConversationsByUserId, checkAuthentication])
 
   const handleSendMessage = async (messageText) => {
     if (!messageText.trim()) return
@@ -326,36 +292,28 @@ export const Agent = () => {
     setIsLoading(true)
     setError(null)
 
-    scrollToBottom()
-
     try {
-      const response = await fetch(`${API_URL}/api/agent/query`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          query: messageText,
-          session_id: sessionIdToUse,
-          id_usuario: localStorage.getItem("id") || "",
-        }),
-      })
-
-      if (!response.ok) {
-        throw new Error("Failed to send message")
+      const payload = {
+        query: messageText,
+        sessionId: sessionIdToUse,
+        userId: localStorage.getItem("id") || "",
       }
 
-      const data = await response.json()
+      const response = await axiosInstance({
+        method: "post",
+        url: `${API_URL}/api/agent/process-query`,
+        data: payload,
+      })
 
       setChatMessages((prev) => [
         ...prev,
         {
           from: "bot",
-          message: data.response,
+          message: response.data.response,
         },
       ])
 
-      scrollToBottom()
-
-      await fetchConversations()
+      await fetchConversationsByUserId()
     } catch (error) {
       console.error("Error sending message:", error)
       setError("Failed to send message. Please try again.")
@@ -371,10 +329,6 @@ export const Agent = () => {
     }
   }
 
-  useEffect(() => {
-    scrollToBottom()
-  }, [chatMessages, isLoading])
-
   const startNewChat = () => {
     setChatMessages([])
     setMessage("")
@@ -388,16 +342,6 @@ export const Agent = () => {
       handleSendMessage(message)
     }
   }
-
-  useEffect(() => {
-    if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight
-    }
-  }, [chatMessages, isLoading])
-
-  useEffect(() => {
-    fetchConversations()
-  }, [fetchConversations])
 
   return (
     <div className="flex w-full h-full gap-x-4">
@@ -415,7 +359,7 @@ export const Agent = () => {
                       key={index}
                       onClick={() => handleSendMessage(action.description)}
                       className="p-3 rounded-lg text-left hover:bg-[var(--bg-hover)] transition-colors group bg-[var(--bg-secondary)] cursor-pointer"
-                      disabled={isLoading || isLoadingConversations}
+                      disabled={isLoading || savedData.isLoadingConversations}
                     >
                       <h3 className="text-sm font-medium flex items-center justify-between">
                         {action.title}
@@ -434,7 +378,7 @@ export const Agent = () => {
                   message={message}
                   setMessage={setMessage}
                   handleSendMessage={handleSendMessage}
-                  isLoading={isLoading || isLoadingConversations}
+                  isLoading={isLoading || savedData.isLoadingConversations}
                   handleKeyDown={handleKeyDown}
                 />
               </div>
@@ -469,7 +413,7 @@ export const Agent = () => {
               message={message}
               setMessage={setMessage}
               handleSendMessage={handleSendMessage}
-              isLoading={isLoading || isLoadingConversations}
+              isLoading={isLoading || savedData.isLoadingConversations}
               handleKeyDown={handleKeyDown}
             />
           )}

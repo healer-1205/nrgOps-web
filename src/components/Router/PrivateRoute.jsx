@@ -1,4 +1,3 @@
-import React from "react"
 import { Navigate } from "react-router-dom"
 import { jwtDecode } from "jwt-decode"
 import axiosInstance from "../../utils/axios"
@@ -20,6 +19,7 @@ export const PrivateRoute = ({ children }) => {
       return <Navigate to="/signin" />
     }
   } catch (error) {
+    console.log(error)
     return <Navigate to="/signin" />
   }
 }
@@ -41,6 +41,7 @@ export const NonPrivateRoute = ({ children }) => {
       return children
     }
   } catch (error) {
+    console.log(error)
     return children
   }
 }
