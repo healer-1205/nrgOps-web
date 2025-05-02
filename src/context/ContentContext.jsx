@@ -22,9 +22,10 @@ function useContentProvider() {
     older: [],
   })
   const [isLoadingConversations, setIsLoadingConversations] = useState(true)
-  const [isLoadingChatPerSession, setIsLoadingChatPerSession] = useState(true)
+  const [isLoadingChatPerSession, setIsLoadingChatPerSession] = useState(false)
   const [agentError, setAgentError] = useState(null)
   const [chatHistoryPerSessioin, setChatHistoryPerSession] = useState([])
+  const [selectedSession, setSelectedSession] = useState(null)
 
   function saveMessageHistoryByUserId(setMessageHistoryByUserIdParam) {
     setMessageHistoryByUserId(setMessageHistoryByUserIdParam)
@@ -45,12 +46,16 @@ function useContentProvider() {
     setChatHistoryPerSession(chatHistory)
   }
 
+  function saveSelectedSession(currentSessionId) {
+    setSelectedSession(currentSessionId)
+  }
+
   function saveAgentErrorStatus(isError) {
     setAgentError(isError)
   }
 
   return {
-    messageHistoryByUserId,
+    messageHistoryByUserId, // This state holds the message history for the user, categorized by date.
     saveMessageHistoryByUserId,
     isLoadingConversations,
     saveLoadingConversationsStatus,
@@ -58,7 +63,9 @@ function useContentProvider() {
     saveAgentErrorStatus,
     isLoadingChatPerSession,
     saveLoadingChatPerSessionStatus,
-    chatHistoryPerSessioin,
+    chatHistoryPerSessioin, // This state holds the chat history for the session of current user.
     saveChatHistoryPerSession,
+    selectedSession,
+    saveSelectedSession,
   }
 }

@@ -1,159 +1,80 @@
 import { useState, useRef, useCallback, useEffect, memo } from "react"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
-import {
-  PaperAirplaneIcon,
-  ChatBubbleLeftEllipsisIcon,
-  UserIcon,
-  BugAntIcon,
-} from "@heroicons/react/24/outline"
+import { UserIcon, BugAntIcon } from "@heroicons/react/24/outline"
 import { ChevronRightIcon } from "@heroicons/react/20/solid"
 import { v4 as uuidv4 } from "uuid"
 import { API_URL } from "../../utils/constants"
 import { useContent } from "../../context/ContentContext"
 import axiosInstance from "../../utils/axios"
 import { processChatHistoryByUserId } from "../../utils/processChatHistoryByUserId"
+import { QuickActions } from "../../utils/constants"
+import { TypingIndicator } from "../../components/TypingIndicator"
+import { InputArea } from "../../components/InputArea"
 
-const QuickActions = [
-  {
-    title: "📋 Today's Leads",
-    description: "How much production did we generate today as a company?",
-  },
-  {
-    title: "🏆 Top Leads",
-    description: "When was the latest oil pick up?",
-  },
-  {
-    title: "🆕 New Leads",
-    description: "What are our least performing wells?",
-  },
-  {
-    title: "🚀 NrgOps AI",
-    description: "What is our expected revenue this month?",
-  },
-]
-
-const InputArea = memo(
-  ({
-    isStandalone = false,
-    message,
-    setMessage,
-    handleSendMessage,
-    isLoading,
-    handleKeyDown,
-  }) => {
-    return (
-      <div
-        className={`${
-          isStandalone
-            ? "w-full max-w-2xl p-4 rounded-lg shadow-md"
-            : "sticky bottom-0 w-full border-t p-4"
-        }`}
-      >
-        <div className={`${isStandalone ? "" : "max-w-3xl mx-auto"}`}>
-          <div className="flex items-center gap-4">
-            <textarea
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="Send a message to NABL"
-              rows={2}
-              className="flex-grow px-4 py-3 rounded-lg placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 border border-[var(--border-color)]"
-              style={{
-                resize: "none",
-                minHeight: "44px",
-                maxHeight: "200px",
-              }}
-            />
-            <button
-              onClick={() => handleSendMessage(message)}
-              disabled={isLoading || !message.trim()}
-              className="p-2 rounded-lg bg-blue-500 hover:bg-blue-600 transition-colors disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
-            >
-              <PaperAirplaneIcon
-                aria-hidden="true"
-                className="size-6 text-white"
-              />
-            </button>
-          </div>
-          <p className="text-xs text-center text-gray-500 mt-2">
-            AI Assistant is ready to help analyze your calls and provide
-            insights.
-          </p>
-        </div>
-      </div>
-    )
-  }
-)
-
-const TypingIndicator = memo(() => (
-  <div className="flex items-end space-x-1 px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 w-16">
-    <div
-      className="w-2 h-2 rounded-full bg-gray-500 dark:bg-gray-400 animate-bounce"
-      style={{ animationDelay: "0ms", animationDuration: "600ms" }}
-    />
-    <div
-      className="w-2 h-2 rounded-full bg-gray-500 dark:bg-gray-400 animate-bounce"
-      style={{ animationDelay: "150ms", animationDuration: "600ms" }}
-    />
-    <div
-      className="w-2 h-2 rounded-full bg-gray-500 dark:bg-gray-400 animate-bounce"
-      style={{ animationDelay: "300ms", animationDuration: "600ms" }}
-    />
-  </div>
-))
-
-const ChatMessage = memo(({ message, from }) => (
-  <div
-    className={`flex ${from === "user" ? "justify-end" : "justify-start"} mb-4`}
-  >
+const ChatMessage = memo(({ message, from }) => {
+  return (
     <div
       className={`flex ${
-        from === "user" ? "flex-row-reverse" : "flex-row"
-      } items-end max-w-3xl gap-2`}
+        from === "user" ? "justify-end" : "justify-start"
+      } mb-4`}
     >
-      <div className={`flex-shrink-0 ${from === "user" ? "ml-2" : "mr-2"}`}>
+      <div
+        className={`flex ${
+          from === "user" ? "flex-row-reverse" : "flex-row"
+        } items-end max-w-3xl gap-2`}
+      >
+        <div className={`flex-shrink-0 ${from === "user" ? "ml-2" : "mr-2"}`}>
+          <div
+            className={`w-8 h-8 rounded-full flex items-center justify-center ${
+              from === "user"
+                ? "bg-blue-500 text-white"
+                : "bg-[var(--bg-secondary)] text-[var(--text-primary)]"
+            }`}
+          >
+            {from === "user" ? (
+              <UserIcon aria-hidden="true" className="size-6 text-white" />
+            ) : (
+              <BugAntIcon
+                aria-hidden="true"
+                className="size-6 text-[var(--text-primary)]"
+              />
+            )}
+          </div>
+        </div>
         <div
-          className={`w-8 h-8 rounded-full flex items-center justify-center ${
+          className={`px-4 py-2 rounded-lg ${
             from === "user"
-              ? "bg-blue-500 text-white"
-              : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200"
+              ? "bg-blue-500 text-white rounded-br-none"
+              : "bg-[var(--bg-secondary)] text-[var(--text-primary)] rounded-bl-none"
           }`}
         >
-          {from === "user" ? (
-            <UserIcon aria-hidden="true" className="size-6 text-white" />
-          ) : (
-            <BugAntIcon aria-hidden="true" className="size-6 text-white" />
-          )}
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>{message}</ReactMarkdown>
         </div>
       </div>
-      <div
-        className={`px-4 py-2 rounded-lg ${
-          from === "user"
-            ? "bg-blue-500 text-white rounded-br-none"
-            : "bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-bl-none"
-        }`}
-      >
-        <ReactMarkdown
-          remarkPlugins={[remarkGfm]}
-          className="prose dark:prose-invert max-w-none"
-        >
-          {message}
-        </ReactMarkdown>
-      </div>
     </div>
-  </div>
-))
+  )
+})
 
 export const Agent = () => {
-  const [message, setMessage] = useState("")
-  const [chatMessages, setChatMessages] = useState([])
-  const [isLoading, setIsLoading] = useState(false)
-  const [currentSessionId, setCurrentSessionId] = useState(null)
-  const [error, setError] = useState(null)
+  const [message, setMessage] = useState("") // State to hold the current message input
   const messagesEndRef = useRef(null)
   const abortControllerRef = useRef(null)
   const savedData = useContent()
+  const [
+    userMessageHistoryDataPerSession,
+    setUserMessageHistoryDataPerSession,
+  ] = useState(savedData.chatHistoryPerSessioin)
+  const [currentSessionId, setCurrentSessionId] = useState(
+    savedData.selectedSession
+  )
+  const [isLoadingChatPerSession, setIsLoadingChatPerSession] = useState(
+    savedData.isLoadingChatPerSession
+  )
+  const [isLoadingConversations, setIsLoadingConversations] = useState(
+    savedData.isLoadingConversations
+  )
+  const [error, setError] = useState(savedData.agentError)
 
   useEffect(() => {
     fetchConversationsByUserId()
@@ -166,72 +87,47 @@ export const Agent = () => {
     }
   }, [])
 
+  // This effect is used to update the chat history per session whenever the savedData changes
+  // This is important to ensure that the chat history is always in sync with the latest data
+  useEffect(() => {
+    setUserMessageHistoryDataPerSession(savedData.chatHistoryPerSessioin)
+  }, [savedData.chatHistoryPerSessioin])
+
+  // This effect is used to update the current session ID whenever the savedData changes
+  // This is important to ensure that the current session ID is always in sync with the latest data
+  useEffect(() => {
+    setCurrentSessionId(savedData.selectedSession)
+  }, [savedData.selectedSession])
+
+  // This effect is used to update the loading state for chat per session whenever the savedData changes
+  // This is important to ensure that the loading state is always in sync with the latest data
+  useEffect(() => {
+    setIsLoadingChatPerSession(savedData.isLoadingChatPerSession)
+  }, [savedData.isLoadingChatPerSession])
+
+  // This effect is used to update the loading state for conversations whenever the savedData changes
+  // This is important to ensure that the loading state is always in sync with the latest data
+  useEffect(() => {
+    setIsLoadingConversations(savedData.isLoadingConversations)
+  }, [savedData.isLoadingConversations])
+
+  // This effect is used to update the error state whenever the savedData changes
+  // This is important to ensure that the error state is always in sync with the latest data
+  useEffect(() => {
+    setError(savedData.agentError)
+  }, [savedData.agentError])
+
+  // This effect is used to scroll to the bottom of the chat messages whenever the chat messages change
+  // This is important to ensure that the user always sees the latest messages
   useEffect(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" })
     }
-  }, [chatMessages, isLoading])
-
-  const fetchMessageHistoryBySession = useCallback(async (sessionId) => {
-    if (!sessionId) {
-      setError("Invalid session ID")
-      return
-    }
-
-    try {
-      setIsLoading(true)
-      setError(null)
-
-      const url = `${API_URL}/message-history/${sessionId}`
-      const response = await fetch(url)
-
-      if (!response.ok) {
-        throw new Error(
-          `Failed to fetch session history: ${response.statusText}`
-        )
-      }
-
-      const data = await response.json()
-
-      if (!data || typeof data !== "object") {
-        throw new Error("Invalid response format")
-      }
-
-      let messages = []
-      if (Array.isArray(data.history)) {
-        messages = data.history
-      } else if (Array.isArray(data.messages)) {
-        messages = data.messages
-      } else {
-        throw new Error("Messages data is not in the expected format")
-      }
-
-      const formattedMessages = messages.map((msg) => ({
-        from:
-          (msg.sender || msg.role || "").toString().toUpperCase() === "USER"
-            ? "user"
-            : "bot",
-        message: msg.content || msg.message || "",
-      }))
-
-      if (formattedMessages.length > 0) {
-        setChatMessages(formattedMessages)
-        setCurrentSessionId(sessionId)
-      } else {
-        setChatMessages([])
-      }
-    } catch (error) {
-      console.error("Error fetching session history:", error)
-      setError("Failed to load chat history. Please try again.")
-      setChatMessages([])
-    } finally {
-      setIsLoading(false)
-    }
-  }, [])
+  }, [isLoadingChatPerSession])
 
   const fetchConversationsByUserId = useCallback(async () => {
     try {
-      savedData.saveLoadingConversationsStatus(true)
+      await savedData.saveLoadingConversationsStatus(true)
       const userId = localStorage.getItem("id")
       const response = await axiosInstance({
         method: "get",
@@ -249,10 +145,6 @@ export const Agent = () => {
       savedData.saveLoadingConversationsStatus(false)
     }
   }, [savedData])
-
-  // useEffect(() => {
-  //   fetchConversationsByUserId()
-  // }, [fetchConversationsByUserId])
 
   // Fetch conversations when the component mounts everytime the user focuses the window
   // or when the visibility changes
@@ -283,13 +175,13 @@ export const Agent = () => {
     let sessionIdToUse = currentSessionId
     if (!sessionIdToUse) {
       sessionIdToUse = uuidv4()
-      setCurrentSessionId(sessionIdToUse)
+      savedData.saveSelectedSession(sessionIdToUse)
     }
 
     const newMessage = { from: "user", message: messageText.trim() }
-    setChatMessages((prev) => [...prev, newMessage])
+    setUserMessageHistoryDataPerSession((prev) => [...prev, newMessage])
     setMessage("")
-    setIsLoading(true)
+    setIsLoadingChatPerSession(true)
     setError(null)
 
     try {
@@ -305,7 +197,7 @@ export const Agent = () => {
         data: payload,
       })
 
-      setChatMessages((prev) => [
+      setUserMessageHistoryDataPerSession((prev) => [
         ...prev,
         {
           from: "bot",
@@ -317,7 +209,7 @@ export const Agent = () => {
     } catch (error) {
       console.error("Error sending message:", error)
       setError("Failed to send message. Please try again.")
-      setChatMessages((prev) => [
+      setUserMessageHistoryDataPerSession((prev) => [
         ...prev,
         {
           from: "bot",
@@ -325,15 +217,8 @@ export const Agent = () => {
         },
       ])
     } finally {
-      setIsLoading(false)
+      setIsLoadingChatPerSession(false)
     }
-  }
-
-  const startNewChat = () => {
-    setChatMessages([])
-    setMessage("")
-    setCurrentSessionId(uuidv4())
-    setError(null)
   }
 
   const handleKeyDown = (e) => {
@@ -348,7 +233,7 @@ export const Agent = () => {
       <div className="w-full shadow-md rounded-md p-4 min-h-[calc(100vh-144px)] bg-[var(--bg-primary)]">
         <div className="flex-1 flex flex-col">
           <div className="flex-1 p-4 overflow-y-auto">
-            {chatMessages.length === 0 ? (
+            {userMessageHistoryDataPerSession.length === 0 ? (
               <div className="flex flex-col items-center max-w-3xl mx-auto">
                 <h2 className="text-2xl font-semibold mb-2 text-center">
                   Your AI Agent
@@ -359,7 +244,9 @@ export const Agent = () => {
                       key={index}
                       onClick={() => handleSendMessage(action.description)}
                       className="p-3 rounded-lg text-left hover:bg-[var(--bg-hover)] transition-colors group bg-[var(--bg-secondary)] cursor-pointer"
-                      disabled={isLoading || savedData.isLoadingConversations}
+                      disabled={
+                        isLoadingChatPerSession || isLoadingConversations
+                      }
                     >
                       <h3 className="text-sm font-medium flex items-center justify-between">
                         {action.title}
@@ -378,24 +265,19 @@ export const Agent = () => {
                   message={message}
                   setMessage={setMessage}
                   handleSendMessage={handleSendMessage}
-                  isLoading={isLoading || savedData.isLoadingConversations}
+                  isLoading={isLoadingChatPerSession || isLoadingConversations}
                   handleKeyDown={handleKeyDown}
                 />
               </div>
             ) : (
               <div className="max-w-3xl mx-auto space-y-4 mb-4">
-                {error && (
-                  <div className="mb-4 p-4 bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-200 rounded-lg">
-                    {error}
-                  </div>
-                )}
-                {chatMessages.map((msg, index) => (
+                {userMessageHistoryDataPerSession.map((msg, index) => (
                   <ChatMessage key={index} {...msg} />
                 ))}
-                {isLoading && (
+                {isLoadingChatPerSession && (
                   <div className="flex items-center space-x-2">
                     <div className="w-8 h-8 rounded-full flex items-center justify-center">
-                      <ChatBubbleLeftEllipsisIcon
+                      <BugAntIcon
                         aria-hidden="true"
                         className="size-6 text-white cursor-pointer"
                       />
@@ -403,17 +285,23 @@ export const Agent = () => {
                     <TypingIndicator />
                   </div>
                 )}
+                {error && (
+                  <div className="mb-4 p-4 bg-red-500 text-gray-100 rounded-lg">
+                    {error}
+                  </div>
+                )}
               </div>
             )}
             <div ref={messagesEndRef} />
           </div>
 
-          {chatMessages.length > 0 && (
+          {userMessageHistoryDataPerSession.length > 0 && (
             <InputArea
+              isStandalone={false}
               message={message}
               setMessage={setMessage}
               handleSendMessage={handleSendMessage}
-              isLoading={isLoading || savedData.isLoadingConversations}
+              isLoading={isLoadingChatPerSession || isLoadingConversations}
               handleKeyDown={handleKeyDown}
             />
           )}

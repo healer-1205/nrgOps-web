@@ -1,6 +1,7 @@
 import { useState, useEffect, Fragment, useRef } from "react"
 import { useLocation, NavLink } from "react-router"
 import { Link, useNavigate } from "react-router-dom"
+import { v4 as uuidv4 } from "uuid"
 import {
   Dialog,
   DialogBackdrop,
@@ -92,6 +93,7 @@ const ChatItem = ({ chat, onDelete, isActive, onSelect }) => {
           <button
             onClick={(e) => {
               e.stopPropagation()
+              e.preventDefault()
               setShowMenu(!showMenu)
             }}
             className="ml-2 p-1 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
@@ -103,6 +105,7 @@ const ChatItem = ({ chat, onDelete, isActive, onSelect }) => {
               <button
                 onClick={(e) => {
                   e.stopPropagation()
+                  e.preventDefault()
                   handleDeleteClick()
                 }}
                 className="w-full flex items-center gap-2 p-2 text-red-500 hover:bg-gray-600 rounded-lg cursor-pointer"
@@ -132,7 +135,9 @@ export const Layout = ({ children }) => {
   const [loadingConversationStatus, setIsLoadingConversationStatus] = useState(
     savedData.isLoadingConversations
   )
-  const [currentSessionId, setCurrentSessionId] = useState(null)
+  const [currentSessionId, setCurrentSessionId] = useState(
+    savedData.selectedSession
+  )
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [selectedChatTitle, setSelectedChatTitle] = useState("")
   const id = localStorage.getItem("id")
@@ -168,6 +173,10 @@ export const Layout = ({ children }) => {
   useEffect(() => {
     setIsLoadingConversationStatus(savedData.isLoadingConversations)
   }, [savedData.isLoadingConversations])
+
+  useEffect(() => {
+    setCurrentSessionId(savedData.selectedSession)
+  }, [savedData.selectedSession])
 
   useEffect(() => {
     axiosInstance({
@@ -208,10 +217,10 @@ export const Layout = ({ children }) => {
             : "bot",
         message: msg.chat || "",
       }))
-      console.log("formattedMessages:", formattedMessages)
       if (formattedMessages.length > 0) {
         savedData.saveChatHistoryPerSession(formattedMessages)
         setCurrentSessionId(sessionId)
+        savedData.saveSelectedSession(sessionId)
       } else {
         savedData.saveChatHistoryPerSession([])
       }
@@ -222,6 +231,12 @@ export const Layout = ({ children }) => {
     } finally {
       savedData.saveLoadingChatPerSessionStatus(false)
     }
+  }
+
+  const startNewChat = () => {
+    savedData.saveChatHistoryPerSession([])
+    savedData.saveSelectedSession(uuidv4())
+    savedData.saveAgentErrorStatus(null)
   }
 
   return (
@@ -369,13 +384,14 @@ export const Layout = ({ children }) => {
                             Agent
                           </div>
                           <div className="flex items-center gap-x-3">
-                            <MagnifyingGlassIcon
+                            {/* <MagnifyingGlassIcon
                               aria-hidden="true"
                               className="size-6 text-gray-300"
-                            />
+                            /> */}
                             <PencilSquareIcon
                               aria-hidden="true"
                               className="size-6 text-gray-300"
+                              onClick={startNewChat}
                             />
                           </div>
                         </NavLink>
@@ -383,83 +399,102 @@ export const Layout = ({ children }) => {
                     </ul>
                   </li>
                   <li>
-                    {loadingConversationStatus ? (
-                      <div className="flex flex-col items-center justify-center h-full space-y-4">
-                        <div className="animate-spin rounded-full h-8 w-8 border-2 border-blue-500 border-t-transparent"></div>
-                        <p className="text-sm text-gray-400">
-                          Loading conversations...
-                        </p>
-                      </div>
-                    ) : (
-                      <Fragment>
-                        {userMessageHistoryData.today.length > 0 && (
-                          <div className="space-y-1 mb-4">
-                            <p className="text-xs font-medium text-gray-400 px-3 py-2">
-                              Today
-                            </p>
-                            {userMessageHistoryData.today.map((chat) => (
-                              <ChatItem
-                                key={chat.session_id}
-                                chat={chat}
-                                onSelect={() =>
-                                  fetchMessageHistoryBySession(chat.session_id)
-                                }
-                                onDelete={() => {
-                                  setSelectedChatTitle(chat.title)
-                                  setCurrentSessionId(chat.session_id)
-                                  setShowDeleteModal(true)
-                                }}
-                                isActive={chat.session_id === currentSessionId}
-                              />
-                            ))}
-                          </div>
-                        )}
-                        {userMessageHistoryData.yesterday.length > 0 && (
-                          <div className="space-y-1 mb-4">
-                            <p className="text-xs font-medium text-gray-400 px-3 py-2">
-                              Yesterday
-                            </p>
-                            {userMessageHistoryData.yesterday.map((chat) => (
-                              <ChatItem
-                                key={chat.session_id}
-                                chat={chat}
-                                onSelect={() =>
-                                  fetchMessageHistoryBySession(chat.session_id)
-                                }
-                                onDelete={() => {
-                                  setSelectedChatTitle(chat.title)
-                                  setCurrentSessionId(chat.session_id)
-                                  setShowDeleteModal(true)
-                                }}
-                                isActive={chat.session_id === currentSessionId}
-                              />
-                            ))}
-                          </div>
-                        )}
-                        {userMessageHistoryData.older.length > 0 && (
-                          <div className="space-y-1 mb-4">
-                            <p className="text-xs font-medium text-gray-400 px-3 py-2">
-                              Older
-                            </p>
-                            {userMessageHistoryData.older.map((chat) => (
-                              <ChatItem
-                                key={chat.session_id}
-                                chat={chat}
-                                onSelect={() =>
-                                  fetchMessageHistoryBySession(chat.session_id)
-                                }
-                                onDelete={() => {
-                                  setSelectedChatTitle(chat.title)
-                                  setCurrentSessionId(chat.session_id)
-                                  setShowDeleteModal(true)
-                                }}
-                                isActive={chat.session_id === currentSessionId}
-                              />
-                            ))}
-                          </div>
-                        )}
-                      </Fragment>
-                    )}
+                    <NavLink
+                      to="/agent"
+                      className={({ isActive }) =>
+                        classNames(isActive ? "block" : "hidden", "")
+                      }
+                    >
+                      {loadingConversationStatus ? (
+                        <div className="flex flex-col items-center justify-center h-full space-y-4">
+                          <div className="animate-spin rounded-full h-8 w-8 border-2 border-blue-500 border-t-transparent"></div>
+                          <p className="text-sm text-gray-400">
+                            Loading conversations...
+                          </p>
+                        </div>
+                      ) : (
+                        <Fragment>
+                          {userMessageHistoryData.today.length > 0 && (
+                            <div className="space-y-1 mb-4">
+                              <p className="text-xs font-medium text-gray-400 px-3 py-2">
+                                Today
+                              </p>
+                              {userMessageHistoryData.today.map((chat) => (
+                                <ChatItem
+                                  key={chat.session_id}
+                                  chat={chat}
+                                  onSelect={() =>
+                                    fetchMessageHistoryBySession(
+                                      chat.session_id
+                                    )
+                                  }
+                                  onDelete={() => {
+                                    setSelectedChatTitle(chat.title)
+                                    setCurrentSessionId(chat.session_id)
+                                    setShowDeleteModal(true)
+                                  }}
+                                  isActive={
+                                    chat.session_id === currentSessionId
+                                  }
+                                />
+                              ))}
+                            </div>
+                          )}
+                          {userMessageHistoryData.yesterday.length > 0 && (
+                            <div className="space-y-1 mb-4">
+                              <p className="text-xs font-medium text-gray-400 px-3 py-2">
+                                Yesterday
+                              </p>
+                              {userMessageHistoryData.yesterday.map((chat) => (
+                                <ChatItem
+                                  key={chat.session_id}
+                                  chat={chat}
+                                  onSelect={() =>
+                                    fetchMessageHistoryBySession(
+                                      chat.session_id
+                                    )
+                                  }
+                                  onDelete={() => {
+                                    setSelectedChatTitle(chat.title)
+                                    setCurrentSessionId(chat.session_id)
+                                    setShowDeleteModal(true)
+                                  }}
+                                  isActive={
+                                    chat.session_id === currentSessionId
+                                  }
+                                />
+                              ))}
+                            </div>
+                          )}
+                          {userMessageHistoryData.older.length > 0 && (
+                            <div className="space-y-1 mb-4">
+                              <p className="text-xs font-medium text-gray-400 px-3 py-2">
+                                Older
+                              </p>
+                              {userMessageHistoryData.older.map((chat) => (
+                                <ChatItem
+                                  key={chat.session_id}
+                                  chat={chat}
+                                  onSelect={() =>
+                                    fetchMessageHistoryBySession(
+                                      chat.session_id
+                                    )
+                                  }
+                                  onDelete={() => {
+                                    setSelectedChatTitle(chat.title)
+                                    setCurrentSessionId(chat.session_id)
+                                    setShowDeleteModal(true)
+                                  }}
+                                  isActive={
+                                    chat.session_id === currentSessionId
+                                  }
+                                />
+                              ))}
+                            </div>
+                          )}
+                        </Fragment>
+                      )}
+                    </NavLink>
                   </li>
                 </ul>
               </nav>
@@ -592,19 +627,14 @@ export const Layout = ({ children }) => {
                         Agent
                       </div>
                       <div className="flex items-center gap-x-3">
-                        <MagnifyingGlassIcon
+                        {/* <MagnifyingGlassIcon
                           aria-hidden="true"
                           className="size-6 text-gray-300"
-                          onClick={() => {
-                            alert("Search clicked")
-                          }}
-                        />
+                        /> */}
                         <PencilSquareIcon
                           aria-hidden="true"
                           className="size-6 text-gray-300"
-                          onClick={() => {
-                            alert("New clicked")
-                          }}
+                          onClick={startNewChat}
                         />
                       </div>
                     </NavLink>
@@ -612,83 +642,90 @@ export const Layout = ({ children }) => {
                 </ul>
               </li>
               <li>
-                {loadingConversationStatus ? (
-                  <div className="flex flex-col items-center justify-center h-full space-y-4">
-                    <div className="animate-spin rounded-full h-8 w-8 border-2 border-blue-500 border-t-transparent"></div>
-                    <p className="text-sm text-gray-400">
-                      Loading conversations...
-                    </p>
-                  </div>
-                ) : (
-                  <Fragment>
-                    {userMessageHistoryData.today.length > 0 && (
-                      <div className="space-y-1 mb-4">
-                        <p className="text-xs font-medium text-gray-400 px-3 py-2">
-                          Today
-                        </p>
-                        {userMessageHistoryData.today.map((chat) => (
-                          <ChatItem
-                            key={chat.session_id}
-                            chat={chat}
-                            onSelect={() =>
-                              fetchMessageHistoryBySession(chat.session_id)
-                            }
-                            onDelete={() => {
-                              setSelectedChatTitle(chat.title)
-                              setCurrentSessionId(chat.session_id)
-                              setShowDeleteModal(true)
-                            }}
-                            isActive={chat.session_id === currentSessionId}
-                          />
-                        ))}
-                      </div>
-                    )}
-                    {userMessageHistoryData.yesterday.length > 0 && (
-                      <div className="space-y-1 mb-4">
-                        <p className="text-xs font-medium text-gray-400 px-3 py-2">
-                          Yesterday
-                        </p>
-                        {userMessageHistoryData.yesterday.map((chat) => (
-                          <ChatItem
-                            key={chat.session_id}
-                            chat={chat}
-                            onSelect={() =>
-                              fetchMessageHistoryBySession(chat.session_id)
-                            }
-                            onDelete={() => {
-                              setSelectedChatTitle(chat.title)
-                              setCurrentSessionId(chat.session_id)
-                              setShowDeleteModal(true)
-                            }}
-                            isActive={chat.session_id === currentSessionId}
-                          />
-                        ))}
-                      </div>
-                    )}
-                    {userMessageHistoryData.older.length > 0 && (
-                      <div className="space-y-1 mb-4">
-                        <p className="text-xs font-medium text-gray-400 px-3 py-2">
-                          Older
-                        </p>
-                        {userMessageHistoryData.older.map((chat) => (
-                          <ChatItem
-                            key={chat.session_id}
-                            chat={chat}
-                            onSelect={() =>
-                              fetchMessageHistoryBySession(chat.session_id)
-                            }
-                            onDelete={() => {
-                              setSelectedChatTitle(chat.title)
-                              setCurrentSessionId(chat.session_id)
-                              setShowDeleteModal(true)
-                            }}
-                            isActive={chat.session_id === currentSessionId}
-                          />
-                        ))}
-                      </div>
-                    )}
-                  </Fragment>
-                )}
+                <NavLink
+                  to="/agent"
+                  className={({ isActive }) =>
+                    classNames(isActive ? "block" : "hidden", "")
+                  }
+                >
+                  {loadingConversationStatus ? (
+                    <div className="flex flex-col items-center justify-center h-full space-y-4">
+                      <div className="animate-spin rounded-full h-8 w-8 border-2 border-blue-500 border-t-transparent"></div>
+                      <p className="text-sm text-gray-400">
+                        Loading conversations...
+                      </p>
+                    </div>
+                  ) : (
+                    <Fragment>
+                      {userMessageHistoryData.today.length > 0 && (
+                        <div className="space-y-1 mb-4">
+                          <p className="text-xs font-medium text-gray-400 px-3 py-2">
+                            Today
+                          </p>
+                          {userMessageHistoryData.today.map((chat) => (
+                            <ChatItem
+                              key={chat.session_id}
+                              chat={chat}
+                              onSelect={() =>
+                                fetchMessageHistoryBySession(chat.session_id)
+                              }
+                              onDelete={() => {
+                                setSelectedChatTitle(chat.title)
+                                setCurrentSessionId(chat.session_id)
+                                setShowDeleteModal(true)
+                              }}
+                              isActive={chat.session_id === currentSessionId}
+                            />
+                          ))}
+                        </div>
+                      )}
+                      {userMessageHistoryData.yesterday.length > 0 && (
+                        <div className="space-y-1 mb-4">
+                          <p className="text-xs font-medium text-gray-400 px-3 py-2">
+                            Yesterday
+                          </p>
+                          {userMessageHistoryData.yesterday.map((chat) => (
+                            <ChatItem
+                              key={chat.session_id}
+                              chat={chat}
+                              onSelect={() =>
+                                fetchMessageHistoryBySession(chat.session_id)
+                              }
+                              onDelete={() => {
+                                setSelectedChatTitle(chat.title)
+                                setCurrentSessionId(chat.session_id)
+                                setShowDeleteModal(true)
+                              }}
+                              isActive={chat.session_id === currentSessionId}
+                            />
+                          ))}
+                        </div>
+                      )}
+                      {userMessageHistoryData.older.length > 0 && (
+                        <div className="space-y-1 mb-4">
+                          <p className="text-xs font-medium text-gray-400 px-3 py-2">
+                            Older
+                          </p>
+                          {userMessageHistoryData.older.map((chat) => (
+                            <ChatItem
+                              key={chat.session_id}
+                              chat={chat}
+                              onSelect={() =>
+                                fetchMessageHistoryBySession(chat.session_id)
+                              }
+                              onDelete={() => {
+                                setSelectedChatTitle(chat.title)
+                                setCurrentSessionId(chat.session_id)
+                                setShowDeleteModal(true)
+                              }}
+                              isActive={chat.session_id === currentSessionId}
+                            />
+                          ))}
+                        </div>
+                      )}
+                    </Fragment>
+                  )}
+                </NavLink>
               </li>
             </ul>
           </nav>
@@ -889,6 +926,7 @@ export const Layout = ({ children }) => {
                           savedData.saveMessageHistoryByUserId(
                             sortedConversations
                           )
+                          startNewChat()
                         }
                       })
                       .catch((err) => {
