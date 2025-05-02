@@ -14,11 +14,11 @@ export const InputArea = memo(
       <div
         className={`${
           isStandalone
-            ? "w-full max-w-2xl p-4 rounded-lg shadow-md"
+            ? "w-full max-w-5xl py-4 rounded-lg shadow-md"
             : "sticky bottom-0 w-full border-t border-[var(--border-color)] bg-[var(--bg-primary)] p-4"
         }`}
       >
-        <div className={`${isStandalone ? "" : "max-w-3xl mx-auto"}`}>
+        <div className={`${isStandalone ? "" : "max-w-5xl mx-auto"}`}>
           <div className="flex items-center gap-4">
             <textarea
               value={message}
