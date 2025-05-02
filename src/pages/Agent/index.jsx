@@ -234,11 +234,11 @@ export const Agent = () => {
         <div className="flex-1 flex flex-col">
           <div className="flex-1 p-4 overflow-y-auto">
             {userMessageHistoryDataPerSession.length === 0 ? (
-              <div className="flex flex-col items-center max-w-3xl mx-auto">
+              <div className="flex flex-col items-center max-w-5xl mx-auto">
                 <h2 className="text-2xl font-semibold mb-2 text-center">
                   Your AI Agent
                 </h2>
-                <div className="pt-8 grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-2xl mb-6">
+                <div className="pt-8 grid grid-cols-1 sm:grid-cols-2 gap-3 w-full mb-6">
                   {QuickActions.map((action, index) => (
                     <button
                       key={index}
@@ -270,7 +270,7 @@ export const Agent = () => {
                 />
               </div>
             ) : (
-              <div className="max-w-3xl mx-auto space-y-4 mb-4">
+              <div className="max-w-5xl mx-auto space-y-4 mb-4">
                 {userMessageHistoryDataPerSession.map((msg, index) => (
                   <ChatMessage key={index} {...msg} />
                 ))}
