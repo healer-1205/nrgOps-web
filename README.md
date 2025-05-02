@@ -1,8 +1,21 @@
 # NrgOps
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is MCP platform to generate plugins using OpenAI API.
 
-Currently, two official plugins are available:
+## Local installation guide
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Node.js version >= 18.20.1
+
+After clone the repository run this command
+```
+npm install
+```
+```
+npm run dev
+```
+
+## Page description
+
+### Agent page
+
+Specialized AI agent for Oil & Gas Operations Analyst and Virtual Back Office Assistant
