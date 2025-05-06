@@ -147,29 +147,6 @@ export const Agent = () => {
     }
   }, [savedData])
 
-  // Fetch conversations when the component mounts everytime the user focuses the window
-  // or when the visibility changes
-
-  // useEffect(() => {
-  //   const handleFocus = () => {
-  // if (checkAuthentication()) {
-  //   fetchConversationsByUserId()
-  // }
-  //   }
-
-  //   window.addEventListener("focus", handleFocus)
-  //   document.addEventListener("visibilitychange", () => {
-  //     if (document.visibilityState === "visible") {
-  //       handleFocus()
-  //     }
-  //   })
-
-  //   return () => {
-  //     window.removeEventListener("focus", handleFocus)
-  //     document.removeEventListener("visibilitychange", handleFocus)
-  //   }
-  // }, [fetchConversationsByUserId, checkAuthentication])
-
   const handleSendMessage = async (messageText) => {
     if (!messageText.trim()) return
 
