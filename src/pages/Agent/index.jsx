@@ -58,6 +58,7 @@ const ChatMessage = memo(({ message, from }) => {
 
 export const Agent = () => {
   const [message, setMessage] = useState("") // State to hold the current message input
+  const [uploadedFiles, setUploadedFiles] = useState([])
   const messagesEndRef = useRef(null)
   const abortControllerRef = useRef(null)
   const savedData = useContent()
@@ -189,6 +190,7 @@ export const Agent = () => {
         query: messageText,
         sessionId: sessionIdToUse,
         userId: localStorage.getItem("id") || "",
+        fileIds: uploadedFiles?.map((f) => f.fileId),
       }
 
       const response = await axiosInstance({
@@ -218,13 +220,6 @@ export const Agent = () => {
       ])
     } finally {
       setIsLoadingChatPerSession(false)
-    }
-  }
-
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault()
-      handleSendMessage(message)
     }
   }
 
@@ -266,7 +261,8 @@ export const Agent = () => {
                   setMessage={setMessage}
                   handleSendMessage={handleSendMessage}
                   isLoading={isLoadingChatPerSession || isLoadingConversations}
-                  handleKeyDown={handleKeyDown}
+                  setUploadedFiles={setUploadedFiles}
+                  uploadedFiles={uploadedFiles}
                 />
               </div>
             ) : (
@@ -302,7 +298,8 @@ export const Agent = () => {
               setMessage={setMessage}
               handleSendMessage={handleSendMessage}
               isLoading={isLoadingChatPerSession || isLoadingConversations}
-              handleKeyDown={handleKeyDown}
+              setUploadedFiles={setUploadedFiles}
+              uploadedFiles={uploadedFiles}
             />
           )}
         </div>
