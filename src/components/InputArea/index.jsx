@@ -1,4 +1,4 @@
-import { memo, useRef, useState, useEffect } from "react"
+import { memo, useRef, useState } from "react"
 import { PaperAirplaneIcon, PaperClipIcon } from "@heroicons/react/24/outline"
 import { API_URL } from "../../utils/constants"
 import axiosInstance from "../../utils/axios"
@@ -103,10 +103,6 @@ export const InputArea = memo(
       const files = e.dataTransfer.files
       handleFileUpload(files)
     }
-
-    useEffect(() => {
-      console.log("uploadedFiles:", uploadedFiles)
-    }, [uploadedFiles])
 
     return (
       <div
