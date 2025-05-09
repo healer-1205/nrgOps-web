@@ -79,7 +79,7 @@ const ChatItem = ({ chat, onDelete, isActive, onSelect }) => {
     <>
       <div
         className={`relative flex items-center p-3 rounded-lg mb-2 transition-colors duration-200 cursor-pointer ${
-          isActive ? "bg-blue-900" : "bg-gray-800 hover:bg-gray-700"
+          isActive ? "bg-indigo-900" : "bg-gray-800 hover:bg-gray-700"
         }`}
         onClick={handleSelect}
       >
@@ -108,7 +108,7 @@ const ChatItem = ({ chat, onDelete, isActive, onSelect }) => {
                   e.preventDefault()
                   handleDeleteClick()
                 }}
-                className="w-full flex items-center gap-2 p-2 text-red-500 hover:bg-gray-600 rounded-lg cursor-pointer"
+                className="w-full flex items-center gap-2 p-2 text-red-500 hover:bg-gray-600 rounded-md cursor-pointer"
               >
                 <TrashIcon aria-hidden="true" className="size-4" />
                 Delete Conversation
@@ -292,7 +292,7 @@ export const Layout = ({ children }) => {
                               }
                             >
                               <item.icon
-                                className="h-6 w-6 shrink-0 text-gray-300"
+                                className="h-6 w-6 shrink-0 text-gray-400"
                                 aria-hidden="true"
                               />
                               {item.name}
@@ -315,7 +315,7 @@ export const Layout = ({ children }) => {
                                     )}
                                   >
                                     <item.icon
-                                      className="h-6 w-6 shrink-0 text-gray-300"
+                                      className="h-6 w-6 shrink-0 text-gray-400"
                                       aria-hidden="true"
                                     />
                                     {item.name}
@@ -378,7 +378,7 @@ export const Layout = ({ children }) => {
                         >
                           <div className="flex items-center gap-x-3">
                             <UserGroupIcon
-                              className="h-6 w-6 shrink-0 text-gray-300"
+                              className="h-6 w-6 shrink-0 text-gray-400"
                               aria-hidden="true"
                             />
                             Agent
@@ -386,11 +386,11 @@ export const Layout = ({ children }) => {
                           <div className="flex items-center gap-x-3">
                             {/* <MagnifyingGlassIcon
                               aria-hidden="true"
-                              className="size-6 text-gray-300"
+                              className="size-6 text-gray-400"
                             /> */}
                             <PencilSquareIcon
                               aria-hidden="true"
-                              className="size-6 text-gray-300"
+                              className="size-6 text-gray-400"
                               onClick={startNewChat}
                             />
                           </div>
@@ -407,7 +407,7 @@ export const Layout = ({ children }) => {
                     >
                       {loadingConversationStatus ? (
                         <div className="flex flex-col items-center justify-center h-full space-y-4">
-                          <div className="animate-spin rounded-full h-8 w-8 border-2 border-blue-500 border-t-transparent"></div>
+                          <div className="animate-spin rounded-full h-8 w-8 border-2 border-indigo-500 border-t-transparent"></div>
                           <p className="text-sm text-gray-400">
                             Loading conversations...
                           </p>
@@ -531,7 +531,7 @@ export const Layout = ({ children }) => {
                           >
                             {item.icon && (
                               <item.icon
-                                className="h-6 w-6 shrink-0 text-gray-300"
+                                className="h-6 w-6 shrink-0 text-gray-400"
                                 aria-hidden="true"
                               />
                             )}
@@ -558,7 +558,7 @@ export const Layout = ({ children }) => {
                                   )}
                                 >
                                   <item.icon
-                                    className="h-6 w-6 shrink-0 text-gray-300"
+                                    className="h-6 w-6 shrink-0 text-gray-400"
                                     aria-hidden="true"
                                   />
                                   {item.name}
@@ -621,7 +621,7 @@ export const Layout = ({ children }) => {
                     >
                       <div className="flex items-center gap-x-3">
                         <UserGroupIcon
-                          className="h-6 w-6 shrink-0 text-gray-300"
+                          className="h-6 w-6 shrink-0 text-gray-400"
                           aria-hidden="true"
                         />
                         Agent
@@ -629,11 +629,11 @@ export const Layout = ({ children }) => {
                       <div className="flex items-center gap-x-3">
                         {/* <MagnifyingGlassIcon
                           aria-hidden="true"
-                          className="size-6 text-gray-300"
+                          className="size-6 text-gray-400"
                         /> */}
                         <PencilSquareIcon
                           aria-hidden="true"
-                          className="size-6 text-gray-300"
+                          className="size-6 text-gray-400"
                           onClick={startNewChat}
                         />
                       </div>
@@ -650,7 +650,7 @@ export const Layout = ({ children }) => {
                 >
                   {loadingConversationStatus ? (
                     <div className="flex flex-col items-center justify-center h-full space-y-4">
-                      <div className="animate-spin rounded-full h-8 w-8 border-2 border-blue-500 border-t-transparent"></div>
+                      <div className="animate-spin rounded-full h-8 w-8 border-2 border-indigo-500 border-t-transparent"></div>
                       <p className="text-sm text-gray-400">
                         Loading conversations...
                       </p>
@@ -944,7 +944,7 @@ export const Layout = ({ children }) => {
                   type="button"
                   data-autofocus
                   onClick={() => setShowDeleteModal(false)}
-                  className="mt-3 inline-flex w-full justify-center rounded-md bg-blue-500 hover:bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-xs sm:mt-0 sm:w-auto cursor-pointer"
+                  className="mt-3 inline-flex w-full justify-center rounded-md bg-indigo-600 hover:bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-xs sm:mt-0 sm:w-auto cursor-pointer"
                 >
                   Cancel
                 </button>

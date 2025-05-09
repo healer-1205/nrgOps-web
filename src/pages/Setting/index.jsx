@@ -1,7 +1,7 @@
 export const Setting = () => {
   return (
     <>
-      <h1>Setting</h1>
+      <p className="text-3xl font-semibold mb-8">Setting</p>
     </>
   )
 }

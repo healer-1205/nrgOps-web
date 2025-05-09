@@ -52,7 +52,7 @@ export const Signup = () => {
                     type="email"
                     required
                     className={
-                      "block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm " +
+                      "block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm " +
                       (isError ? "border-red-500" : "")
                     }
                     onChange={(e) => {
@@ -75,7 +75,7 @@ export const Signup = () => {
                     type="password"
                     required
                     className={
-                      "block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm " +
+                      "block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm " +
                       (isError ? "border-red-500" : "")
                     }
                     onChange={(e) => {
@@ -98,7 +98,7 @@ export const Signup = () => {
                     type="password"
                     required
                     className={
-                      "block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm " +
+                      "block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm " +
                       (isError ? "border-red-500" : "")
                     }
                     onChange={(e) => {
@@ -109,7 +109,7 @@ export const Signup = () => {
               </div>
 
               <div>
-                <button className="flex w-full justify-center rounded-md border border-transparent py-2 px-4 text-sm font-medium text-white shadow-sm bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 cursor-pointer">
+                <button className="flex w-full justify-center rounded-md border border-transparent py-2 px-4 text-sm font-medium text-white shadow-sm bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 cursor-pointer">
                   Register
                 </button>
               </div>
@@ -117,7 +117,7 @@ export const Signup = () => {
               <p className="text-center">
                 Already have an account?{" "}
                 <span>
-                  <Link to="/signin" className="text-blue-500">
+                  <Link to="/signin" className="text-indigo-500">
                     Sign in
                   </Link>
                 </span>

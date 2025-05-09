@@ -1,7 +1,7 @@
 export const Dashboard = () => {
   return (
     <>
-      <h1>Dashboard</h1>
+      <p className="text-3xl font-semibold mb-8">Dashboard</p>
     </>
   )
 }

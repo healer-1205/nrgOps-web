@@ -123,14 +123,14 @@ export const InputArea = memo(
                 <div className="flex gap-2 mb-2 flex-wrap">
                   {uploadedFiles.map((file, index) => (
                     <span
-                      className="inline-flex items-center gap-x-0.5 rounded-md bg-blue-500 px-2 py-1 text-xs font-medium text-white ring-1 ring-blue-700/10 ring-inset"
+                      className="inline-flex items-center gap-x-0.5 rounded-md bg-indigo-500 px-2 py-1 text-xs font-medium text-white ring-1 ring-indigo-700/10 ring-inset"
                       key={index}
                     >
                       {file.fileName}
                       {!file.isUploading && (
                         <button
                           type="button"
-                          className="group relative -mr-1 size-3.5 rounded-xs hover:bg-blue-600/20 cursor-pointer"
+                          className="group relative -mr-1 size-3.5 rounded-md hover:bg-indigo-600/20 cursor-pointer"
                           onClick={() => handleRemoveFile(file.fileId)}
                         >
                           <span className="sr-only">Remove</span>
@@ -162,15 +162,15 @@ export const InputArea = memo(
                 }}
                 placeholder="Send a message to NrgOps"
                 rows={2}
-                className={`w-full px-4 py-3 rounded-lg placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 border resize-none min-h-[44px] max-h-[200px] ${
+                className={`w-full px-4 py-3 rounded-lg placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 border resize-none min-h-[44px] max-h-[200px] ${
                   isDragging
-                    ? "border-blue-500"
+                    ? "border-indigo-500"
                     : "border-[var(--border-color)]"
                 }`}
               />
               {isDragging && (
-                <div className="absolute inset-0 bg-blue-50 bg-opacity-50 border-2 border-dashed border-blue-500 rounded-lg flex items-center justify-center">
-                  <p className="text-blue-500 font-medium">Drop files here</p>
+                <div className="absolute inset-0 bg-indigo-50 bg-opacity-50 border-2 border-dashed border-indigo-500 rounded-lg flex items-center justify-center">
+                  <p className="text-indigo-500 font-medium">Drop files here</p>
                 </div>
               )}
             </div>
@@ -183,7 +183,7 @@ export const InputArea = memo(
             />
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="p-2 rounded-lg bg-blue-500 hover:bg-blue-600 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+              className="p-2 rounded-md bg-indigo-600 hover:bg-indigo-500 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               title={isUploading ? "Uploading..." : "Attach files"}
               disabled={isUploading}
             >
@@ -204,7 +204,7 @@ export const InputArea = memo(
                 })
               }}
               disabled={isLoading || isUploading || !message.trim()}
-              className="p-2 rounded-lg bg-blue-500 hover:bg-blue-600 transition-colors disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
+              className="p-2 rounded-md bg-indigo-600 hover:bg-indigo-500 transition-colors disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
             >
               <PaperAirplaneIcon
                 aria-hidden="true"

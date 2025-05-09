@@ -28,7 +28,7 @@ const ChatMessage = memo(({ message, from }) => {
           <div
             className={`w-8 h-8 rounded-full flex items-center justify-center ${
               from === "user"
-                ? "bg-blue-500 text-white"
+                ? "bg-indigo-500 text-white"
                 : "bg-[var(--bg-secondary)] text-[var(--text-primary)]"
             }`}
           >
@@ -45,7 +45,7 @@ const ChatMessage = memo(({ message, from }) => {
         <div
           className={`px-4 py-2 rounded-lg ${
             from === "user"
-              ? "bg-blue-500 text-white rounded-br-none"
+              ? "bg-indigo-500 text-white rounded-br-none"
               : "bg-[var(--bg-secondary)] text-[var(--text-primary)] rounded-bl-none"
           }`}
         >
@@ -215,7 +215,7 @@ export const Agent = () => {
                     <button
                       key={index}
                       onClick={() => handleSendMessage(action.description)}
-                      className="p-3 rounded-lg text-left hover:bg-[var(--bg-hover)] transition-colors group bg-[var(--bg-secondary)] cursor-pointer"
+                      className="p-3 rounded-md text-left hover:bg-[var(--bg-hover)] transition-colors group bg-[var(--bg-secondary)] cursor-pointer"
                       disabled={
                         isLoadingChatPerSession || isLoadingConversations
                       }

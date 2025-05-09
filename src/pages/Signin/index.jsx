@@ -57,7 +57,7 @@ export const Signin = () => {
                     autoComplete="email"
                     required
                     className={
-                      "block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm " +
+                      "block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm " +
                       (isError ? "border-red-500" : "")
                     }
                     onChange={(e) => {
@@ -81,7 +81,7 @@ export const Signin = () => {
                     autoComplete="current-password"
                     required
                     className={
-                      "block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm " +
+                      "block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm " +
                       (isError ? "border-red-500" : "")
                     }
                     onChange={(e) => {
@@ -95,7 +95,7 @@ export const Signin = () => {
                 <div className="text-sm">
                   <Link
                     to="/forgot-password"
-                    className="font-medium text-blue-500 hover:text-blue-600"
+                    className="font-medium text-indigo-500 hover:text-indigo-600"
                   >
                     Forgot password?
                   </Link>
@@ -103,7 +103,7 @@ export const Signin = () => {
               </div>
 
               <div>
-                <button className="flex w-full justify-center rounded-md border border-transparent py-2 px-4 text-sm font-medium text-white shadow-sm bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 cursor-pointer">
+                <button className="flex w-full justify-center rounded-md border border-transparent py-2 px-4 text-sm font-medium text-white shadow-sm bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 cursor-pointer">
                   Sign in
                 </button>
               </div>
@@ -111,7 +111,7 @@ export const Signin = () => {
               <p className="text-center">
                 Not a member?{" "}
                 <span>
-                  <Link to="/signup" className="text-blue-500">
+                  <Link to="/signup" className="text-indigo-500">
                     Sign up
                   </Link>
                 </span>
