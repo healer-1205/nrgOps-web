@@ -7,6 +7,7 @@ import { Dashboard } from "./pages/Dashboard"
 import { Agent } from "./pages/Agent"
 import { Database } from "./pages/Database"
 import { Plugins } from "./pages/Plugins"
+import { CreatePlugin } from "./pages/Plugins/create"
 import { Setting } from "./pages/Setting"
 import "./App.css"
 
@@ -61,6 +62,16 @@ function App() {
           <PrivateRoute>
             <Layout>
               <Plugins />
+            </Layout>
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/plugins/create"
+        element={
+          <PrivateRoute>
+            <Layout>
+              <CreatePlugin />
             </Layout>
           </PrivateRoute>
         }

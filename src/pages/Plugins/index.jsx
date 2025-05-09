@@ -25,7 +25,7 @@ export const Plugins = () => {
   return (
     <div>
       <div className="flex items-center justify-between mb-8">
-        <p className="text-3xl font-semibold mb-8">Plugins</p>
+        <p className="text-3xl font-semibold">Plugins</p>
         <button
           type="button"
           className="rounded-md bg-indigo-600 hover:bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 cursor-pointer"
@@ -33,7 +33,7 @@ export const Plugins = () => {
             navigate("/plugins/create")
           }}
         >
-          Create
+          New
         </button>
       </div>
       <ul
