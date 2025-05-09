@@ -8,9 +8,9 @@
   --bg-secondary: #f3f4f6;
   --text-primary: #111827;
   --text-secondary: #4b5563;
-  --border-color: #e5e7eb;
+  --border-color: #d1d5db;
   --header-bg: #ffffff;
-  --bg-hover: #e5e7eb;
+  --bg-hover: #d1d5db;
 }
 
 .dark {
@@ -18,9 +18,9 @@
   --bg-secondary: #1f2937;
   --text-primary: #f3f4f6;
   --text-secondary: #d1d5db;
-  --border-color: #374151;
+  --border-color: #4b5563;
   --header-bg: #1f2937;
-  --bg-hover: #374151;
+  --bg-hover: #4b5563;
 }
 
 :root {
