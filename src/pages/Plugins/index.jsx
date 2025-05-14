@@ -1,26 +1,25 @@
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-
-const plugins = [
-  {
-    name: "Plugin 1",
-    title: "Plugin 1 description",
-  },
-  {
-    name: "Plugin 2",
-    title: "Plugin 2 description",
-  },
-  {
-    name: "Plugin 3",
-    title: "Plugin 3 description",
-  },
-  {
-    name: "Plugin 4",
-    title: "Plugin 4 description",
-  },
-]
+import axiosInstance from "../../utils/axios"
+import { API_URL } from "../../utils/constants"
 
 export const Plugins = () => {
   const navigate = useNavigate()
+  const userId = localStorage.getItem("id")
+  const [plugins, setPlugins] = useState([])
+
+  useEffect(() => {
+    axiosInstance({
+      method: "get",
+      url: `${API_URL}/api/plugins/${userId}`,
+    })
+      .then((res) => {
+        setPlugins(res.data.plugins)
+      })
+      .catch((err) => {
+        console.log("Error to get plugins data: ", err)
+      })
+  }, [userId])
 
   return (
     <div>
@@ -40,21 +39,31 @@ export const Plugins = () => {
         role="list"
         className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
       >
-        {plugins.map((plugin, index) => (
+        {plugins.map((plugin) => (
           <li
-            key={index}
+            key={plugin.id}
             className="col-span-1 rounded-lg bg-[var(--bg-primary)] shadow-sm"
           >
             <div className="flex w-full items-center justify-between space-x-6 p-6">
-              <div className="flex-1 truncate">
-                <div className="flex items-center space-x-3">
-                  <h3 className="truncate text-lg font-medium">
-                    {plugin.name}
-                  </h3>
+              <div className="flex-1">
+                <div className="flex items-center justify-center space-x-3">
+                  {plugin.sources.map((source, index) => (
+                    <h3 key={index} className="text-lg font-medium">
+                      {source.toUpperCase()}
+                    </h3>
+                  ))}
                 </div>
-                <p className="mt-1 truncate text-sm text-[var(--text-secondary)]">
-                  {plugin.title}
-                </p>
+                {Object.entries(plugin.instructions).map(
+                  ([key, rule], index) => (
+                    <p
+                      key={index}
+                      className="mt-1 text-sm text-[var(--text-secondary)]"
+                    >
+                      <strong>{key}: </strong>
+                      {rule}
+                    </p>
+                  )
+                )}
               </div>
             </div>
           </li>
