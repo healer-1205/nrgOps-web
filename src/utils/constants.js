@@ -1,3 +1,5 @@
+import assets from "../assets"
+
 export const API_URL = "http://192.168.100.71:5000"
 
 export const QuickActions = [
@@ -18,3 +20,26 @@ export const QuickActions = [
     description: "What is our expected revenue this month?",
   },
 ]
+
+export const integrations = [
+  {
+    id: "pdf",
+    name: "PDF",
+    img: assets.PDFIcon,
+  },
+  {
+    id: "gdoc",
+    name: "Google Doc",
+    img: assets.DOCIcon,
+  },
+  {
+    id: "gsheet",
+    name: "Google Sheet",
+    img: assets.SHEETIcon,
+  },
+]
+
+export const override = {
+  borderColor: "#4f46e5",
+  zIndex: 31,
+}
