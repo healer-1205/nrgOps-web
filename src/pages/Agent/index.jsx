@@ -164,7 +164,7 @@ export const Agent = () => {
 
     try {
       const payload = {
-        query: messageText,
+        prompt: messageText,
         sessionId: sessionIdToUse,
         userId: localStorage.getItem("id") || "",
         fileIds: uploadedFiles?.map((f) => f.fileId),
