@@ -53,17 +53,9 @@ export const Plugins = () => {
                     </h3>
                   ))}
                 </div>
-                {Object.entries(plugin.instructions).map(
-                  ([key, rule], index) => (
-                    <p
-                      key={index}
-                      className="mt-1 text-sm text-[var(--text-secondary)]"
-                    >
-                      <strong>{key}: </strong>
-                      {rule}
-                    </p>
-                  )
-                )}
+                <p className="mt-1 text-sm text-[var(--text-secondary)]">
+                  {plugin.instructions}
+                </p>
               </div>
             </div>
           </li>
