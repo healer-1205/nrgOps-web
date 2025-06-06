@@ -1,6 +1,9 @@
 import { useState, useRef, useCallback, useEffect, memo } from "react"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
+import remarkBreaks from "remark-breaks"
+import remarkParse from "remark-parse"
+import remarkRehype from "remark-rehype"
 import { UserIcon, BugAntIcon } from "@heroicons/react/24/outline"
 import { ChevronRightIcon } from "@heroicons/react/20/solid"
 import { v4 as uuidv4 } from "uuid"
@@ -49,7 +52,11 @@ const ChatMessage = memo(({ message, from }) => {
               : "bg-[var(--bg-secondary)] text-[var(--text-primary)] rounded-bl-none"
           }`}
         >
-          <ReactMarkdown remarkPlugins={[remarkGfm]}>{message}</ReactMarkdown>
+          <ReactMarkdown
+            remarkPlugins={[remarkGfm, remarkBreaks, remarkParse, remarkRehype]}
+          >
+            {message}
+          </ReactMarkdown>
         </div>
       </div>
     </div>
